@@ -1,8 +1,8 @@
-module com.example.csc325capstone {
+module com.example.bearsfrontend {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
-
-    opens com.example.csc325capstone to javafx.fxml;
-    exports com.example.csc325capstone;
+    opens com.example.bearsfrontend to javafx.fxml;
+    exports com.example.bearsfrontend;
 }
