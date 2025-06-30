@@ -26,6 +26,8 @@ public class registerController {
 
         @FXML
         void registerClicked(ActionEvent event) {
+            FirestoreDB db = new FirestoreDB();
+            db.connect();
             emailField.getText();
             firstNameField.getText();
             lastNameField.getText();
