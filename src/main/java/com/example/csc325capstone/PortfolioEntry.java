@@ -9,6 +9,7 @@ import java.util.Map;
 public class PortfolioEntry {
 
     private String tickerSymbol;
+    private String companyName;
     private int totalShares;
     private double averageBuyPrice;
     private double currentMarketPrice;
@@ -17,19 +18,36 @@ public class PortfolioEntry {
 
     public PortfolioEntry() {}
 
-    public PortfolioEntry(String tickerSymbol, int totalShares, double averageBuyPrice, double currentMarketPrice, double unrealizedGainLoss, double totalValue) {
+    public PortfolioEntry(String tickerSymbol, String companyName, int totalShares, double averageBuyPrice, double currentMarketPrice, double unrealizedGainLoss, double totalValue) {
         this.tickerSymbol = tickerSymbol;
+        this.companyName = companyName;
         this.totalShares = totalShares;
         this.averageBuyPrice = averageBuyPrice;
         this.currentMarketPrice = currentMarketPrice;
         this.unrealizedGainLoss = unrealizedGainLoss;
         this.totalValue = totalValue;
+    }
 
+    public static PortfolioEntry fromStock(Stock stock, int totalShares, double averageBuyPrice) {
+        double currentPrice = stock.getCurrentPrice();
+        double totalValue = currentPrice * totalShares;
+        double unrealized = (currentPrice - averageBuyPrice) * totalShares;
+
+        return new PortfolioEntry(
+                stock.getTickerSymbol(),
+                stock.getCompanyName(),
+                totalShares,
+                averageBuyPrice,
+                currentPrice,
+                unrealized,
+                totalValue
+        );
     }
 
     public Map<String, Object> toMap(){
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("tickerSymbol", tickerSymbol);
+        map.put("companyName", companyName);
         map.put("totalShares", totalShares);
         map.put("averageBuyPrice", averageBuyPrice);
         map.put("currentMarketPrice", currentMarketPrice);
@@ -43,6 +61,14 @@ public class PortfolioEntry {
     }
     public void setTickerSymbol(String tickerSymbol) {
         this.tickerSymbol = tickerSymbol;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public int getTotalShares() {

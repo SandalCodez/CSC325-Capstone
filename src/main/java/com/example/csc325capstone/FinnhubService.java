@@ -1,7 +1,6 @@
 package com.example.csc325capstone;
 
 import org.json.JSONObject;
-
 import javax.websocket.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -78,10 +77,10 @@ public class FinnhubService {
             reader.close();
 
             JSONObject json = new JSONObject(response.toString());
-            return json.optString("name", ticker);  // fallback if name not found
+            return json.optString("name", ticker);
         } catch (Exception e) {
             e.printStackTrace();
-            return ticker;  // fallback if error
+            return ticker;
         }
     }
 
@@ -96,7 +95,6 @@ public class FinnhubService {
                 String uri = "wss://ws.finnhub.io?token=YOUR_API_KEY";  // Replace with actual token or use Cloud Function if routed
                 container.connectToServer(this, URI.create(uri));
 
-                // Delay to ensure connection is ready before subscribing
                 Thread.sleep(1000);
 
                 String subscribeMessage = "{\"type\":\"subscribe\",\"symbol\":\"" + symbol + "\"}";
