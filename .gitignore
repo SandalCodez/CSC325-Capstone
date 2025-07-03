@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Firebase service account key - NEVER commit this!
+src/main/resources/files/bearsKey.json
+
+# Additional security - ignore all JSON files in the files directory
+src/main/resources/files/*.json
