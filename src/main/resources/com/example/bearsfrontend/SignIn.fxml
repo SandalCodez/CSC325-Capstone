@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bearsfrontend.SignInController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bearsfrontend.SignInController">
    <children>
 
-      <Button layoutX="274.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
-      <Button layoutX="237.0" layoutY="352.0" mnemonicParsing="false" onAction="#handleNewUsers" text="New users click here!" />
-      <TextField alignment="TOP_CENTER" layoutX="203.0" layoutY="22.0" prefHeight="77.0" prefWidth="189.0" text="!Bears">
-         <font>
-            <Font size="36.0" />
-         </font></TextField>
-      <TextField layoutX="194.0" layoutY="114.0" prefHeight="110.0" prefWidth="213.0" />
-      <TextField fx:id="usernameField" layoutX="226.0" layoutY="241.0" onAction="#handleSubmit" onMouseClicked="#clearUsername" text="Username" />
-      <TextField fx:id="passwordField" layoutX="226.0" layoutY="282.0" onAction="#handleSubmit" onMouseClicked="#clearPassword" text="Password" />
-      <TextArea layoutX="425.0" layoutY="241.0" prefHeight="116.0" prefWidth="149.0" text="*boolean for recognized&#10; stored credentials*&#10;&#10;&quot;Username or password &#10;not recognized, please&#10;try again&quot;" />
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
+         <image>
+            <Image url="@images/defbackground.png" />
+         </image>
+      </ImageView>
+
+      <ImageView fitHeight="123.0" fitWidth="285.0" layoutX="156.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/!bearsLogo.png" />
+         </image>
+      </ImageView>
+
+      <Button layoutX="259.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="25.0" prefWidth="77.0" text="Login" />
+      <Button fx:id="newusers" layoutX="201.0" layoutY="326.0" mnemonicParsing="false" onAction="#handleNewUsers" prefHeight="35.0" prefWidth="206.0" text="New users click here!" />
+
+
+
+      <TextField fx:id="usernameField" layoutX="226.0" layoutY="205.0" onAction="#handleSubmit" onMouseClicked="#clearUsername" prefHeight="25.0" prefWidth="149.0" text="Username" />
+      <TextField fx:id="passwordField" layoutX="226.0" layoutY="245.0" onAction="#handleSubmit" onMouseClicked="#clearPassword" prefHeight="25.0" prefWidth="149.0" text="Password" />
 
    </children>
 </AnchorPane>
