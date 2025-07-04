@@ -13,7 +13,7 @@ public class Transaction {
     private String tickerSymbol;
     private int quantity;
     private double pricePerShare;
-    private Boolean isBuy;
+    private boolean isBuy;
     private LocalDateTime timestamp;
 
     public Transaction() {
@@ -69,10 +69,10 @@ public class Transaction {
         this.pricePerShare = pricePerShare;
     }
 
-    public Boolean getIsBuy() {
+    public boolean getIsBuy() {
         return isBuy;
     }
-    public void setIsBuy(Boolean isBuy) {
+    public void setIsBuy(boolean isBuy) {
         this.isBuy = isBuy;
     }
 
