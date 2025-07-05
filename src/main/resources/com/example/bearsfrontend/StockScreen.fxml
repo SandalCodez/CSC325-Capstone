@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.bearsfrontend.StockScreenController">
+
+   <children>
+
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
+         <image>
+            <Image url="@images/defbackground.png" />
+         </image>
+      </ImageView>
+
+      <TextArea layoutX="40.0" layoutY="77.0" prefHeight="115.0" prefWidth="200.0"
+                text="Ticker&#10;Full company name&#10;Live trading price&#10;Day open price&#10;Previous Close&#10;Other relevant info" />
+
+      <TextArea layoutX="40.0" layoutY="216.0" prefHeight="115.0" prefWidth="200.0"
+                text="*if stock is owned y/n*&#10;Amt of shares owned if y&#10;Pnl dollar value&#10;Pnl %&#10;% of total potfolio&#10;Recent news" />
+
+      <Button layoutX="405.0" layoutY="103.0" prefHeight="25.0" prefWidth="101.0" text="Buy" />
+      <Button layoutX="405.0" layoutY="147.0" prefHeight="25.0" prefWidth="101.0" text="Sell" />
+      <Button layoutX="376.0" layoutY="252.0" prefHeight="33.0" prefWidth="163.0"
+              onAction="#handleBackToMainPortfolio" text="Back to Portfolio Overview" />
+
+      <TextField layoutX="256.0" layoutY="30.0" prefHeight="49.0" prefWidth="101.0" text="!Bears">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>

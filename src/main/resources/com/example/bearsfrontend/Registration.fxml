@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bearsfrontend.RegistrationController">
+   <children>
+
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
+         <image>
+            <Image url="@images/defbackground.png" />
+         </image>
+      </ImageView>
+
+      <TextField layoutX="66.0" layoutY="188.0" text="Email" />
+      <TextField layoutX="66.0" layoutY="118.0" text="First Name" />
+      <TextField layoutX="66.0" layoutY="258.0" text="Password" />
+      <TextField layoutX="387.0" layoutY="118.0" text="Last Name" />
+      <TextField layoutX="387.0" layoutY="188.0" text="Confirm Email" />
+      <TextField layoutX="387.0" layoutY="258.0" text="Confirm Password" />
+      <Button layoutX="258.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
+      <TextField alignment="CENTER" layoutX="226.0" layoutY="34.0" prefHeight="45.0" prefWidth="149.0" text="!Bears">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+
+   </children>
+</AnchorPane>
