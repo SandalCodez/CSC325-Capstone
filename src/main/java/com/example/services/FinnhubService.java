@@ -1,5 +1,6 @@
-package com.example.csc325capstone;
+package com.example.services;
 
+import com.example.models.Stock;
 import org.json.JSONObject;
 import javax.websocket.*;
 import java.io.BufferedReader;

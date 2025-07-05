@@ -1,4 +1,4 @@
-package com.example.bearsfrontend;
+package com.example;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Driver extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/example/bearsfrontend/splash.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/splash.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
         stage.setTitle("Sign In");
         stage.setScene(scene);

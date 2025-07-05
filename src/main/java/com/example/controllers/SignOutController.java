@@ -1,4 +1,4 @@
-package com.example.bearsfrontend;
+package com.example.controllers;
 
 public class SignOutController {
 

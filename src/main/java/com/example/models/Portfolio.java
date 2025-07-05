@@ -1,4 +1,4 @@
-package com.example.csc325capstone;
+package com.example.models;
 
 import java.util.ArrayList;
 import java.util.List;

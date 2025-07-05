@@ -1,4 +1,4 @@
-package com.example.csc325capstone;
+package com.example.services;
 
 public class PortfolioCalculator {
 }

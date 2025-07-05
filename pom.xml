@@ -22,26 +22,33 @@
     </repositories>
 
     <dependencies>
+        <!-- Firebase Admin SDK (keep only one version) -->
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>9.3.0</version>
         </dependency>
 
-        <!-- Add protobuf dependency -->
+        <!-- Add explicit Firestore dependency -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-firestore</artifactId>
+            <version>3.15.0</version>
+        </dependency>
+
+        <!-- Protobuf dependencies -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>4.28.3</version>
         </dependency>
-
-        <!-- Add protobuf-java-util for additional protobuf utilities -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>4.28.3</version>
         </dependency>
 
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -52,6 +59,8 @@
             <artifactId>javafx-fxml</artifactId>
             <version>22.0.1</version>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -64,28 +73,29 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Only add google-cloud-storage if you specifically need it for non-Firebase storage operations -->
+
+        <!-- Google Cloud Storage (if needed) -->
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-storage</artifactId>
             <version>2.22.2</version>
         </dependency>
+
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.9</version>
         </dependency>
 
+        <!-- JSON -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20210307</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.2.0</version>
-        </dependency>
+
+        <!-- WebSocket -->
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
@@ -96,7 +106,6 @@
             <artifactId>tyrus-client</artifactId>
             <version>1.18</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -118,7 +127,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.bearsfrontend/com.example.bearsfrontend.HelloApplication</mainClass>
+                            <mainClass>com.example.bearsfrontend/com.example.Driver</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

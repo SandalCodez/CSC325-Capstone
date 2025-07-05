@@ -1,4 +1,4 @@
-package com.example.bearsfrontend;
+package com.example.controllers;
 
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
@@ -16,7 +16,7 @@ public class SplashController {
 
     @FXML
     public void initialize() {
-        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
         delay.setOnFinished(event -> {
             try {
                 Parent signInRoot = FXMLLoader.load(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
