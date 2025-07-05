@@ -1,14 +1,15 @@
 package com.example.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class User {
-    private String fName;
-    private String lName;
-    private String email;
-    private Date createdAt;
+    public String fName;
+    public String lName;
+    public String email;
+    public Date createdAt;
 
-    public User(String fName, String lName, String email, Date createdAt) {
+    public User(String fName, String lName, String email, LocalDate createdAt) {
         this.fName = fName;
         this.lName = lName;
         this.email = email;

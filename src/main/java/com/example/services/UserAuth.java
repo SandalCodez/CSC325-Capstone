@@ -8,20 +8,22 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class UserAuth {
     private final FirebaseAuth auth;
     private final Firestore db;
 
-    public UserAuth() {
+    public UserAuth(Firestore db) {
+        this.db = db;
         FirestoreDB firestoreDB = new FirestoreDB();
-        this.db = firestoreDB.connect();
+//        this.db = firestoreDB.connect();
         this.auth = FirebaseAuth.getInstance();
     }
 
     // Register user with email/password
-    public String registerUser(String email, String password, String firstName, String lastName, Date createdAt) throws Exception {
+    public String registerUser(String email, String password, String firstName, String lastName, LocalDate createdAt) throws Exception {
        //MAKE CREATED AT DURING TIME OF REGISTER BTN CLICKED
         CreateRequest request = new CreateRequest()
                 .setEmail(email)

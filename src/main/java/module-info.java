@@ -17,6 +17,8 @@ module com.example.models {
     exports com.example.models;
 //    exports com.example.bearsfrontend;
 
+
+
     // Open both packages to JavaFX and Gson
     opens com.example.models to javafx.fxml, com.google.gson;
     opens com.example.bearsfrontend to javafx.fxml, com.google.gson;

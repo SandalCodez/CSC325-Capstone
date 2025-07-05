@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
    <children>
 
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
@@ -19,13 +21,13 @@
          </image>
       </ImageView>
 
-      <Button layoutX="259.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="25.0" prefWidth="77.0" text="Login" />
+      <Button fx:id="loginBtn" layoutX="259.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="25.0" prefWidth="77.0" text="Login" />
       <Button fx:id="newusers" layoutX="201.0" layoutY="326.0" mnemonicParsing="false" onAction="#handleNewUsers" prefHeight="35.0" prefWidth="206.0" text="New users click here!" />
 
 
 
-      <TextField fx:id="usernameField" layoutX="226.0" layoutY="205.0" onAction="#handleSubmit" onMouseClicked="#clearUsername" prefHeight="25.0" prefWidth="149.0" text="Username" />
-      <TextField fx:id="passwordField" layoutX="226.0" layoutY="245.0" onAction="#handleSubmit" onMouseClicked="#clearPassword" prefHeight="25.0" prefWidth="149.0" text="Password" />
+      <TextField fx:id="usernameField" layoutX="226.0" layoutY="205.0" onAction="#handleSubmit" onMouseClicked="#clearUsername" prefHeight="25.0" prefWidth="149.0" promptText="Username" />
+      <TextField fx:id="passwordField" layoutX="226.0" layoutY="245.0" onAction="#handleSubmit" onMouseClicked="#clearPassword" prefHeight="25.0" prefWidth="149.0" promptText="Password" />
 
    </children>
 </AnchorPane>
