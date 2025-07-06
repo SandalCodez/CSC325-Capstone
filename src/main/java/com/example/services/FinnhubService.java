@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +15,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class FinnhubService {
 
@@ -117,7 +120,7 @@ public class FinnhubService {
         try (InputStream is = conn.getInputStream();
              InputStreamReader isr = new InputStreamReader(is)) {
             JsonParser parser = new JsonParser();
-            return parser.parse(isr).getAsJsonObject(); // or map it to a POJO
+            return parser.parse(isr).getAsJsonObject();
         }
     }
 
@@ -137,7 +140,6 @@ public class FinnhubService {
             }
             in.close();
 
-            // Parse JSON
             JSONArray jsonArray = new JSONArray(response.toString());
             for (int i = 0; i < Math.min(5, jsonArray.length()); i++) { // Only show top 5 news items
                 JSONObject newsItem = jsonArray.getJSONObject(i);
@@ -197,6 +199,53 @@ public class FinnhubService {
         } catch (Exception e) {
             e.printStackTrace();
             return new CompanyProfile("N/A", "N/A", 0.0, 0L);
+        }
+    }
+
+    public boolean isMarketOpen() {
+        try {
+            String url = "https://finnhub.io/api/v1/stock/market-status?exchange=US&token=" + API_KEY;
+            JSONObject response = fetchJsonFromUrl(url);
+            System.out.println("Market status response: " + response);
+            JSONObject json = fetchJsonFromUrl(url);
+            return json.optBoolean("isOpen", false);
+        } catch (Exception e) {
+            System.err.println("Error checking market status: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void getCurrentPriceWithFallback(String symbol, Consumer<Double> onPriceUpdate) {
+        if (isMarketOpen()) {
+            try {
+                FinnhubWebSocketClient wsClient = new FinnhubWebSocketClient(symbol) {
+                    @Override
+                    public void onMessage(String message) {
+                        try {
+                            JSONObject json = new JSONObject(message);
+                            JSONArray data = json.optJSONArray("data");
+                            if (data != null && data.length() > 0) {
+                                double price = data.getJSONObject(0).optDouble("p", 0.0);
+                                onPriceUpdate.accept(price);
+                            }
+                        } catch (JSONException e) {
+                            System.err.println("WebSocket JSON parse error: " + e.getMessage());
+                        }
+                    }
+                };
+
+                wsClient.startClient(); // starts the WebSocket
+
+            } catch (URISyntaxException e) {
+                System.err.println("WebSocket URI error: " + e.getMessage());
+                // fallback to REST if WebSocket fails
+                Stock stock = getQuoteForTicker(symbol);
+                onPriceUpdate.accept(stock.getCurrentPrice());
+            }
+        } else {
+            // fallback to REST
+            Stock stock = getQuoteForTicker(symbol);
+            onPriceUpdate.accept(stock.getCurrentPrice());
         }
     }
 }

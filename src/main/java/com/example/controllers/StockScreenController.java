@@ -3,6 +3,7 @@ package com.example.controllers;
 import com.example.models.CompanyProfile;
 import com.example.models.Stock;
 import com.example.services.FinnhubService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,7 +45,6 @@ public class StockScreenController {
 
     @FXML
     private void initialize() {
-        // Optional: auto-load if initialTicker is passed early
         if (initialTicker != null) {
             loadStockData(initialTicker);
         }
@@ -67,7 +67,11 @@ public class StockScreenController {
             tickerLabel.setText(symbol);
             companyNameLabel.setText(profile.getName());
             industryLabel.setText(profile.getIndustry());
-            currentPriceLabel.setText(String.valueOf(stock.getCurrentPrice()));
+
+            finnhubService.getCurrentPriceWithFallback(symbol, price -> {
+                Platform.runLater(() -> currentPriceLabel.setText(String.format("%.2f", price)));
+            });
+
             marketCapLabel.setText(String.format("%.2f", profile.getMarketCap()));
             sharesOutstandingLabel.setText(String.valueOf(profile.getSharesOutstanding()));
 
