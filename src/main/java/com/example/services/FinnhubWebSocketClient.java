@@ -1,61 +1,59 @@
 package com.example.services;
 
-import javax.websocket.*;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
-@ClientEndpoint
-public class FinnhubWebSocketClient {
-    private Session session;
-    private final String API_KEY;
+public class FinnhubWebSocketClient extends WebSocketClient {
 
-    public FinnhubWebSocketClient() {
-        // Load API key from config
-        String key = "";
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+    private static String API_KEY;
+
+    // Static block loads the key once
+    static {
+        try (InputStream input = FinnhubWebSocketClient.class.getClassLoader().getResourceAsStream("config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
-            key = prop.getProperty("finnhub.api.key");
+            API_KEY = prop.getProperty("finnhub.api.key");
+            System.out.println("Loaded API KEY: " + API_KEY);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        API_KEY = key;
-    }
-
-    public void connectToTicker(String symbol) {
-        try {
-            String uri = "wss://ws.finnhub.io?token=" + API_KEY;
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, URI.create(uri));
-            Thread.sleep(1000);
-
-            String subscribeMessage = "{\"type\":\"subscribe\",\"symbol\":\"" + symbol + "\"}";
-            session.getAsyncRemote().sendText(subscribeMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error loading API key: " + e.getMessage());
         }
     }
 
-    @OnOpen
-    public void onOpen(Session session) {
+    public FinnhubWebSocketClient(String symbol) throws URISyntaxException {
+        super(new URI("wss://ws.finnhub.io?token=" + API_KEY));
+        this.symbol = symbol;
+    }
+
+    private final String symbol;
+
+    @Override
+    public void onOpen(ServerHandshake handshakedata) {
         System.out.println("Connected to Finnhub WebSocket.");
-        this.session = session;
+        String message = "{\"type\":\"subscribe\",\"symbol\":\"" + symbol + "\"}";
+        send(message);
     }
 
-    @OnMessage
+    @Override
     public void onMessage(String message) {
         System.out.println("Received: " + message);
     }
 
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
         System.out.println("WebSocket closed: " + reason);
     }
 
-    @OnError
-    public void onError(Session session, Throwable throwable) {
-        System.err.println("WebSocket error: " + throwable.getMessage());
+    @Override
+    public void onError(Exception ex) {
+        System.err.println("WebSocket error: " + ex.getMessage());
     }
 
+    // Start the WebSocket client
+    public void startClient() {
+        connect();
+    }
 }
