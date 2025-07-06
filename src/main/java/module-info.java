@@ -11,6 +11,7 @@ module com.example.models {
     requires com.google.gson;
     requires org.json;
     requires org.slf4j;
+
     requires Java.WebSocket;
 
     // Export both packages
