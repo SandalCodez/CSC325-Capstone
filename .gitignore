@@ -44,3 +44,6 @@ src/main/resources/files/bearsKey.json
 src/main/resources/files/*.json
 
 src/main/resources/config.properties
+/build/
+/out/
+/target/
