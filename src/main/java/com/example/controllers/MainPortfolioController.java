@@ -1,4 +1,4 @@
-package com.example.bearsfrontend;
+package com.example.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import com.example.services.ChatGPTClient;
 
 import java.io.IOException;
 
@@ -65,5 +68,42 @@ public class MainPortfolioController {
             stage.setTitle("StockScreen");
             stage.show();
         }
+    }
+    @FXML
+    private TextField userInput;
+
+    @FXML
+    private TextArea chatArea;
+
+    @FXML
+    private Button sendBtn;
+
+
+    @FXML
+    protected void onSend() {
+        String userMsg = userInput.getText();
+        if (!userMsg.isBlank()) {
+            chatArea.appendText("You: " + userMsg + "\n");
+            userInput.clear();
+
+            //Loading message
+            chatArea.appendText("AI: ...thinking...\n");
+
+            new Thread(() -> {
+                try {
+                    String aiReply = ChatGPTClient.ask(userMsg);
+                    javafx.application.Platform.runLater(() -> {
+                        chatArea.appendText("AI: " + aiReply.trim() + "\n");
+                    });
+                } catch (Exception ex) {
+                    javafx.application.Platform.runLater(() ->
+                            chatArea.appendText("AI: (Error: " + ex.getMessage() + ")\n")
+                    );
+                }
+            }).start();
+
+
+        }
+
     }
 }

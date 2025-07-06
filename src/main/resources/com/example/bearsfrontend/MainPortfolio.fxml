@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.bearsfrontend.MainPortfolioController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.MainPortfolioController">
 
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
@@ -17,41 +17,28 @@
          </image>
       </ImageView>
 
-      <Button layoutX="56.0" layoutY="29.0" mnemonicParsing="false"
-              onAction="#handleToSignOut" prefHeight="25.0" prefWidth="84.0" text="Sign out" />
+      <Button layoutX="56.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="25.0" prefWidth="84.0" text="Sign out" />
 
-      <Button layoutX="56.0" layoutY="72.0" mnemonicParsing="false"
-              onAction="#handleBackToLogIn" prefHeight="25.0" prefWidth="84.0" text="Exit" />
+      <Button layoutX="56.0" layoutY="72.0" mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="25.0" prefWidth="84.0" text="Exit" />
 
-      <Button layoutX="466.0" layoutY="29.0" mnemonicParsing="false"
-              prefHeight="25.0" prefWidth="84.0" text="Add Funds" />
+      <Button layoutX="466.0" layoutY="29.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Add Funds" />
 
-      <TextArea layoutX="40.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0"
-                text="Snapshot - overall account value&#10;Daily / all time pnl&#10;Notabe assets held" />
+      <TextArea layoutX="40.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0" text="Snapshot - overall account value&#10;Daily / all time pnl&#10;Notabe assets held" />
 
-      <TextArea layoutX="40.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0"
-                text="Ask ChatGPT&#10;" />
+      <TextArea fx:id="chatArea" editable="false" layoutX="366.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0" promptText="ChatGPT response Area" />
 
-      <TextArea layoutX="366.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0"
-                text="ChatGPT response Area" />
+      <TextArea layoutX="366.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0" text="Market news" />
 
-      <TextArea layoutX="366.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0"
-                text="Market news" />
+      <TextArea layoutX="40.0" layoutY="259.0" prefHeight="127.0" prefWidth="526.0" text="Columns for ticker, stock name, latest price, open, close, dollar pnl, pnl %, % of portfolio, &#10;other relevant data&#10;&#10;Table view of portfolio&#10;AAPL&#10;TSLA&#10;GME" />
 
-      <TextArea layoutX="40.0" layoutY="259.0" prefHeight="127.0" prefWidth="526.0"
-                text="Columns for ticker, stock name, latest price, open, close, dollar pnl, pnl %, % of portfolio, &#10;other relevant data&#10;&#10;Table view of portfolio&#10;AAPL&#10;TSLA&#10;GME" />
-
-      <TextField layoutX="228.0" layoutY="19.0" prefHeight="77.0" prefWidth="152.0"
-                 text="!Bears" alignment="TOP_CENTER">
+      <TextField alignment="TOP_CENTER" layoutX="228.0" layoutY="19.0" prefHeight="77.0" prefWidth="152.0" text="!Bears">
          <font>
             <Font size="36.0" />
          </font>
       </TextField>
 
-      <TextField fx:id="StockSearchField" layoutX="466.0" layoutY="72.0"
-                 onAction="#handleEnter" onMouseClicked="#clearStockSearch"
-                 prefHeight="25.0" prefWidth="84.0" text="Stock Search"
-                 alignment="CENTER" />
+      <TextField fx:id="StockSearchField" alignment="CENTER" layoutX="466.0" layoutY="72.0" onAction="#handleEnter" onMouseClicked="#clearStockSearch" prefHeight="25.0" prefWidth="84.0" text="Stock Search" />
+      <TextField fx:id="userInput" layoutX="40.0" layoutY="190.0" onAction="#onSend" prefHeight="59.0" prefWidth="200.0" promptText="Ask ChatGPT" />
+      <Button fx:id="sendBtn" layoutX="176.0" layoutY="207.0" mnemonicParsing="false" onAction="#onSend" text="Send" />
    </children>
 </AnchorPane>
-

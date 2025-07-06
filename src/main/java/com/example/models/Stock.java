@@ -1,4 +1,4 @@
-package com.example.csc325capstone;
+package com.example.models;
 
 public class Stock {
 
@@ -84,5 +84,19 @@ public class Stock {
 
     public void setPreviousClose(double previousClose) {
         this.previousClose = previousClose;
+    }
+
+    @Override
+    public String toString() {
+        return "Stock {" +
+                "tickerSymbol='" + tickerSymbol + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", currentPrice=" + currentPrice +
+                ", high=" + high +
+                ", low=" + low +
+                ", open=" + open +
+                ", volume=" + volume +
+                ", previousClose=" + previousClose +
+                '}';
     }
 }

@@ -1,7 +1,8 @@
-package com.example.csc325capstone;
+package com.example.services;
+import com.example.models.User;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
+//import com.google.cloud.firestore.FirestoreOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
@@ -14,8 +15,9 @@ public class UserAuth {
     private final Firestore db;
 
     public UserAuth() {
+        FirestoreDB firestoreDB = new FirestoreDB();
+        this.db = firestoreDB.connect();
         this.auth = FirebaseAuth.getInstance();
-        this.db = FirestoreOptions.getDefaultInstance().getService();
     }
 
     // Register user with email/password

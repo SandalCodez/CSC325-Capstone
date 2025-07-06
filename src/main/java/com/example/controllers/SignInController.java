@@ -1,5 +1,5 @@
 
-package com.example.bearsfrontend;
+package com.example.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import java.awt.*;
+
 import java.io.IOException;
 
 public class SignInController {
