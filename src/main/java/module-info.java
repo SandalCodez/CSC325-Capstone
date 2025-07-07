@@ -12,6 +12,8 @@ module com.example.models {
     requires org.json;
     requires javax.websocket.api;
     requires org.slf4j;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
 
     // Export both packages
     exports com.example.models;

@@ -4,14 +4,16 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class User {
-    public String fName;
-    public String lName;
-    public String email;
-    public Date createdAt;
+    private String fName;
+    private String lName;
+    private String hashedPass;
+    private String email;
+    private Date createdAt;
 
-    public User(String fName, String lName, String email, LocalDate createdAt) {
+    public User(String fName, String lName, String hashedPass, String email, LocalDate createdAt) {
         this.fName = fName;
         this.lName = lName;
+        this.hashedPass = hashedPass;
         this.email = email;
         this.createdAt = new Date();
     }
@@ -33,6 +35,14 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getHashedPass() {
+        return hashedPass;
+    }
+    public void setHashedPass(String hashedPass) {
+        this.hashedPass = hashedPass;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
