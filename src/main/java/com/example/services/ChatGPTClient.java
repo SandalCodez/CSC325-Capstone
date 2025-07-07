@@ -15,7 +15,7 @@ public class ChatGPTClient {
     static {
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream("config.properties"));
+            props.load(ChatGPTClient.class.getClassLoader().getResourceAsStream("config.properties"));
             API_KEY = props.getProperty("OPENAI_API_KEY");
             if (API_KEY == null) throw new RuntimeException("API key not found in config.properties!");
         } catch (Exception e) {
