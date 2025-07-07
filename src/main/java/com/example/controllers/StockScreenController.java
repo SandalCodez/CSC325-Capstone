@@ -95,8 +95,6 @@ public class StockScreenController {
         }
     }
 
-
-
     @FXML
     private void handleBackToMainPortfolio(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
