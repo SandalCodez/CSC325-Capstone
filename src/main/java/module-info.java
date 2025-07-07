@@ -10,8 +10,8 @@ module com.example.models {
     requires com.google.api.apicommon;
     requires com.google.gson;
     requires org.json;
-    requires java.net.http;
     requires org.slf4j;
+
     requires Java.WebSocket;
 
     // Export both packages

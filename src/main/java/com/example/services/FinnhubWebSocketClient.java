@@ -11,7 +11,6 @@ public class FinnhubWebSocketClient extends WebSocketClient {
 
     private static String API_KEY;
 
-    // Static block loads the key once
     static {
         try (InputStream input = FinnhubWebSocketClient.class.getClassLoader().getResourceAsStream("config.properties")) {
             Properties prop = new Properties();
@@ -52,7 +51,6 @@ public class FinnhubWebSocketClient extends WebSocketClient {
         System.err.println("WebSocket error: " + ex.getMessage());
     }
 
-    // Start the WebSocket client
     public void startClient() {
         connect();
     }

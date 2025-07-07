@@ -43,7 +43,7 @@ src/main/resources/files/bearsKey.json
 # Additional security - ignore all JSON files in the files directory
 src/main/resources/files/*.json
 
-config.properties
+src/main/resources/config.properties
 /build/
 /out/
 /target/
