@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.services.ChatGPTClient;
 import com.example.models.PortfolioEntry;
 import com.example.services.FinnhubService;
 import javafx.collections.FXCollections;
@@ -10,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -128,4 +126,40 @@ public class MainPortfolioController {
         portfolioData.add(new PortfolioEntry(
                 "TSLA", "Tesla Inc", 8, 700.0, 750.0, 400.0, 6000.0));
     }
+    @FXML
+    private TextField userInput;
+    @FXML
+    private TextArea chatArea;
+    @FXML
+    private Button sendBtn;
+
+    @FXML
+    protected void onSend() {
+        String userMsg = userInput.getText();
+        if (!userMsg.isBlank()) {
+            chatArea.appendText("You: " + userMsg + "\n");
+            userInput.clear();
+
+            //Loading message
+            chatArea.appendText("AI: ...thinking...\n");
+
+            new Thread(() -> {
+                try {
+                    String aiReply = ChatGPTClient.ask(userMsg);
+                    javafx.application.Platform.runLater(() -> {
+                        chatArea.appendText("AI: " + aiReply.trim() + "\n");
+                    });
+                } catch (Exception ex) {
+                    javafx.application.Platform.runLater(() ->
+                            chatArea.appendText("AI: (Error: " + ex.getMessage() + ")\n")
+                    );
+                }
+            }).start();
+
+
+        }
+
+    }
+
+
 }
