@@ -1,70 +1,89 @@
 package com.example.services;
 
+import com.example.models.CompanyProfile;
 import com.example.models.Stock;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import javax.websocket.*;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class FinnhubService {
 
-    private static final String CLOUD_FUNCTION_URL = "link";
+    private String API_KEY;
+
+    public FinnhubService() {
+        Properties prop = new Properties();
+        try (var input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            prop.load(input);
+            API_KEY = prop.getProperty("finnhub.api.key");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public Map<String, Stock> getQuotesForTickers(List<String> tickers) {
         Map<String, Stock> stockMap = new HashMap<>();
 
-        try {
-            String joinedTickers = String.join(",", tickers);
-            String requestedUrl = CLOUD_FUNCTION_URL + "?tickers=" + joinedTickers;
+        for (String ticker : tickers) {
+            try {
+                String quoteUrl = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" + API_KEY;
+                String companyUrl = "https://finnhub.io/api/v1/stock/profile2?symbol=" + ticker + "&token=" + API_KEY;
 
-            URL url = new URL(requestedUrl);
-            HttpURLConnection conn = (HttpURLConnection)  url.openConnection();
-            conn.setRequestMethod("GET");
+                // Fetch quote
+                JSONObject quoteJson = fetchJsonFromUrl(quoteUrl);
+                double currentPrice = quoteJson.optDouble("c", 0.0);
+                double high = quoteJson.optDouble("h", 0.0);
+                double low = quoteJson.optDouble("l", 0.0);
+                double open = quoteJson.optDouble("o", 0.0);
+                double previousClose = quoteJson.optDouble("pc", 0.0);
+                double volume = quoteJson.optDouble("v", 0.0);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                // Fetch company name
+                JSONObject companyJson = fetchJsonFromUrl(companyUrl);
+                String companyName = companyJson.optString("name", ticker);
+
+                Stock stock = new Stock(ticker, companyName, currentPrice, high, low, open, volume, previousClose);
+                stockMap.put(ticker, stock);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return stockMap;
+    }
+
+    private JSONObject fetchJsonFromUrl(String urlStr) throws Exception {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
-
             String line;
-            while((line = in.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
-
-            in.close();
-
-            JSONObject json = new JSONObject(response.toString());
-
-            for(String ticker : tickers) {
-                if(json.has(ticker)) {
-                    JSONObject quote = json.getJSONObject(ticker);
-
-                    String companyName = getCompanyName(ticker);
-
-                    double currentPrice = quote.optDouble("c", 0.0);
-                    double high = quote.optDouble("h", 0.0);
-                    double low = quote.optDouble("l", 0.0);
-                    double open = quote.optDouble("o", 0.0);
-                    double volume = quote.optDouble("v", 0.0);
-                    double previousClose = quote.optDouble("pc", 0.0);
-
-                    Stock stock = new Stock(ticker, companyName,currentPrice, high, low, open, volume, previousClose);
-                    stockMap.put(ticker, stock);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return new JSONObject(response.toString());
         }
-        return stockMap;
     }
 
     public String getCompanyName(String ticker) {
         try {
-            String urlStr = CLOUD_FUNCTION_URL + "/getCompanyName?ticker=" + ticker;
+            String urlStr = "https://finnhub.io/api/v1/stock/profile2?symbol=" + ticker + "&token=" + API_KEY;
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -72,9 +91,11 @@ public class FinnhubService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder response = new StringBuilder();
             String line;
+
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
+
             reader.close();
 
             JSONObject json = new JSONObject(response.toString());
@@ -85,46 +106,146 @@ public class FinnhubService {
         }
     }
 
-    @ClientEndpoint
-    public class FinnhubWebSocketClient {
+    public JsonObject getHistoricalPrices(String symbol, long fromUnix, long toUnix) throws IOException {
+        String urlStr = String.format(
+                "https://finnhub.io/api/v1/stock/candle?symbol=%s&resolution=D&from=%d&to=%d&token=%s",
+                symbol, fromUnix, toUnix, API_KEY
+        );
+        System.out.println("Fethching: " + urlStr);
 
-        private Session session;
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
 
-        public void connectToTicker(String symbol) {
-            try {
-                WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-                String uri = "wss://ws.finnhub.io?token=YOUR_API_KEY";  // Replace with actual token or use Cloud Function if routed
-                container.connectToServer(this, URI.create(uri));
+        try (InputStream is = conn.getInputStream();
+             InputStreamReader isr = new InputStreamReader(is)) {
+            JsonParser parser = new JsonParser();
+            return parser.parse(isr).getAsJsonObject();
+        }
+    }
 
-                Thread.sleep(1000);
+    public List<String> getMarketNews() {
+        List<String> newsHeadlines = new ArrayList<>();
+        try {
+            String urlString = "https://finnhub.io/api/v1/news?category=general&token=" + API_KEY;
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-                String subscribeMessage = "{\"type\":\"subscribe\",\"symbol\":\"" + symbol + "\"}";
-                session.getAsyncRemote().sendText(subscribeMessage);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
             }
-        }
+            in.close();
 
-        @OnOpen
-        public void onOpen(Session session) {
-            System.out.println("Connected to Finnhub WebSocket.");
-            this.session = session;
+            JSONArray jsonArray = new JSONArray(response.toString());
+            for (int i = 0; i < Math.min(5, jsonArray.length()); i++) { // Only show top 5 news items
+                JSONObject newsItem = jsonArray.getJSONObject(i);
+                String headline = newsItem.getString("headline");
+                newsHeadlines.add("• " + headline);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            newsHeadlines.add("Error loading market news.");
         }
+        return newsHeadlines;
+    }
 
-        @OnMessage
-        public void onMessage(String message) {
-            System.out.println("Received: " + message);
+    public List<String> getCompanyNews(String symbol) {
+        List<String> headlines = new ArrayList<>();
+        try {
+            String urlStr = "https://finnhub.io/api/v1/company-news?symbol=" + symbol +
+                    "&from=2023-01-01&to=2025-12-31&token=" + API_KEY;
+            URL url = new URL(urlStr);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+            JsonArray newsArray = JsonParser.parseReader(reader).getAsJsonArray();
+
+            for (JsonElement element : newsArray) {
+                JsonObject obj = element.getAsJsonObject();
+                String headline = obj.get("headline").getAsString();
+                headlines.add(headline);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            headlines.add("Failed to load news.");
         }
+        return headlines;
+    }
 
-        @OnClose
-        public void onClose(Session session, CloseReason reason) {
-            System.out.println("WebSocket closed: " + reason);
+    public Stock getQuoteForTicker(String ticker) {
+        List<String> singleTickerList = new ArrayList<>();
+        singleTickerList.add(ticker);
+        Map<String, Stock> result = getQuotesForTickers(singleTickerList);
+        return result.get(ticker);
+    }
+
+    public CompanyProfile getCompanyProfile(String symbol) {
+        try {
+            String profileUrl = "https://finnhub.io/api/v1/stock/profile2?symbol=" + symbol + "&token=" + API_KEY;
+            JSONObject profileJson = fetchJsonFromUrl(profileUrl);
+
+            String name = profileJson.optString("name", "N/A");
+            String industry = profileJson.optString("finnhubIndustry", "N/A");
+            double marketCap = profileJson.optDouble("marketCapitalization", 0.0);
+            long sharesOutstanding = (long) profileJson.optDouble("shareOutstanding", 0.0);
+
+            return new CompanyProfile(name, industry, marketCap, sharesOutstanding);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CompanyProfile("N/A", "N/A", 0.0, 0L);
         }
+    }
 
-        @OnError
-        public void onError(Session session, Throwable throwable) {
-            System.err.println("WebSocket error: " + throwable.getMessage());
+    public boolean isMarketOpen() {
+        try {
+            String url = "https://finnhub.io/api/v1/stock/market-status?exchange=US&token=" + API_KEY;
+            JSONObject response = fetchJsonFromUrl(url);
+            System.out.println("Market status response: " + response);
+            JSONObject json = fetchJsonFromUrl(url);
+            return json.optBoolean("isOpen", false);
+        } catch (Exception e) {
+            System.err.println("Error checking market status: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void getCurrentPriceWithFallback(String symbol, Consumer<Double> onPriceUpdate) {
+        if (isMarketOpen()) {
+            try {
+                FinnhubWebSocketClient wsClient = new FinnhubWebSocketClient(symbol) {
+                    @Override
+                    public void onMessage(String message) {
+                        try {
+                            JSONObject json = new JSONObject(message);
+                            JSONArray data = json.optJSONArray("data");
+                            if (data != null && data.length() > 0) {
+                                double price = data.getJSONObject(0).optDouble("p", 0.0);
+                                onPriceUpdate.accept(price);
+                            }
+                        } catch (JSONException e) {
+                            System.err.println("WebSocket JSON parse error: " + e.getMessage());
+                        }
+                    }
+                };
+
+                wsClient.startClient(); // starts the WebSocket
+
+            } catch (URISyntaxException e) {
+                System.err.println("WebSocket URI error: " + e.getMessage());
+                // fallback to REST if WebSocket fails
+                Stock stock = getQuoteForTicker(symbol);
+                onPriceUpdate.accept(stock.getCurrentPrice());
+            }
+        } else {
+            // fallback to REST
+            Stock stock = getQuoteForTicker(symbol);
+            onPriceUpdate.accept(stock.getCurrentPrice());
         }
     }
 }
