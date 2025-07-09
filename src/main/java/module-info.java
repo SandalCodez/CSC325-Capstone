@@ -13,11 +13,15 @@ module com.example.models {
     requires org.slf4j;
     requires java.net.http;
 
+    requires com.fasterxml.jackson.databind;
+
     requires Java.WebSocket;
 
     // Export both packages
     exports com.example.models;
 //    exports com.example.bearsfrontend;
+
+
 
     // Open both packages to JavaFX and Gson
     opens com.example.models to javafx.fxml, com.google.gson;
