@@ -1,8 +1,9 @@
 package com.example.controllers;
 
-import com.example.services.ChatGPTClient;
+import com.example.models.User;
+import com.example.services.*;
 import com.example.models.PortfolioEntry;
-import com.example.services.FinnhubService;
+import com.google.cloud.firestore.Firestore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class MainPortfolioController {
 
@@ -36,11 +38,30 @@ public class MainPortfolioController {
     @FXML
     private TextArea marketNewsArea;
 
+    @FXML
+    private Label balanceLabel;
+
+    @FXML
+    private Button addFundsButton;
+
+
+
     private final FinnhubService finnhubService = new FinnhubService();
     private final ObservableList<PortfolioEntry> portfolioData = FXCollections.observableArrayList();
+    private User loggedInUser;
+    private UserAuth userAuth;
 
 
     public void initialize() {
+
+        userAuth = UserSession.getInstance().getUserAuth();
+        loggedInUser = UserSession.getInstance().getCurrentUser();
+
+        if (loggedInUser != null) {
+            balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+        } else {
+            balanceLabel.setText("Not Available");
+        }
 
         tickerColumn.setCellValueFactory(new PropertyValueFactory<>("tickerSymbol"));
         companyColumn.setCellValueFactory(new PropertyValueFactory<>("companyName"));
@@ -126,6 +147,7 @@ public class MainPortfolioController {
         portfolioData.add(new PortfolioEntry(
                 "TSLA", "Tesla Inc", 8, 700.0, 750.0, 400.0, 6000.0));
     }
+
     @FXML
     private TextField userInput;
     @FXML
@@ -161,5 +183,45 @@ public class MainPortfolioController {
 
     }
 
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+        balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+    }
 
+    @FXML
+    private void handleAddFunds(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("0.0");
+        dialog.setTitle("Add Funds");
+        dialog.setHeaderText("Add funds to balance");
+        dialog.setContentText("Please enter amount");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(input -> {
+            try {
+                double amountToAdd = Double.parseDouble(input.trim());
+
+                if (amountToAdd < 0) {
+                    showAlert("Invalid input", "Must be positive amount");
+                    return;
+                }
+
+                double newBalance = loggedInUser.getAccountBalance() + amountToAdd;
+                loggedInUser.setAccountBalance(newBalance);
+                balanceLabel.setText(String.format("$%.2f", newBalance));
+
+                String uid = UserSession.getInstance().getUserUid();
+                userAuth.updateUserBalance(uid, newBalance);
+            } catch (NumberFormatException e) {
+                showAlert("Invalid input", "Please enter a valid number");
+            }
+        });
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

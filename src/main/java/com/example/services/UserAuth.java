@@ -1,7 +1,9 @@
 package com.example.services;
 import com.example.models.User;
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -44,7 +46,9 @@ public class UserAuth {
         userData.put("email", email);
         userData.put("hashedPass", passwordHash);   // Using your field name
         userData.put("salt", salt);                 // Store salt separately
-        userData.put("createdAt", new Date());      // Using Date instead of LocalDate
+        userData.put("createdAt", new Date());
+        userData.put("balance", 0.0);
+        // Using Date instead of LocalDate
 
         // Store in Firestore
         db.collection("users").document(uid).set(userData).get();
@@ -87,6 +91,20 @@ public class UserAuth {
             // Store UID for session management
             this.currentUserUid = uid;
 
+            System.out.println("Checking for balance field...");
+
+            double balance = 0.0;
+            if (doc.contains("balance")) {
+                try {
+                    balance = doc.getDouble("balance");
+                } catch (Exception e) {
+                    System.out.println("Error retrieving balance: " + e.getMessage());
+                    balance = 0.0;
+                }
+            } else {
+                System.out.println("Balance field not found, defaulting to 0.0");
+            }
+
             // Create and return User object using your constructor
             // Note: Your constructor expects hashedPass, but we don't want to return it for security
             // So I'll create a simplified version
@@ -95,7 +113,8 @@ public class UserAuth {
                     doc.getString("lName"),
                     "", // Empty string for hashedPass - don't return password hash
                     doc.getString("email"),
-                    LocalDate.now() // Your constructor uses LocalDate but stores Date - this is a design choice
+                    LocalDate.now(),// Your constructor uses LocalDate but stores Date - this is a design choice
+                    balance
             );
 
             return user;
@@ -124,15 +143,33 @@ public class UserAuth {
         db.collection("users").document(uid)
                 .update("lastLogin", new Date()).get();
 
+
+        double balance = doc.contains("balance") ? doc.getDouble("balance") : 0.0;
+
         // Create and return User object
         User user = new User(
                 doc.getString("fName"),
                 doc.getString("lName"),
                 "", // Don't return password hash
                 doc.getString("email"),
-                LocalDate.now()
+                LocalDate.now(),
+                balance
         );
 
         return user;
     }
+
+    public void updateUserBalance(String uid, double newBalance) {
+        new Thread(() -> {
+            try {
+                ApiFuture<WriteResult> future = db.collection("users").document(uid)
+                        .update("balance", newBalance);
+                future.get();  // wait for completion
+                System.out.println("Balance updated (async).");
+            } catch (Exception e) {
+                System.out.println("Error updating balance (async): " + e.getMessage());
+            }
+        }).start();
+    }
+
 }

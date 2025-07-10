@@ -9,13 +9,15 @@ public class User {
     private String hashedPass;
     private String email;
     private Date createdAt;
+    private double balance;
 
-    public User(String fName, String lName, String hashedPass, String email, LocalDate createdAt) {
+    public User(String fName, String lName, String hashedPass, String email, LocalDate createdAt, double balance) {
         this.fName = fName;
         this.lName = lName;
         this.hashedPass = hashedPass;
         this.email = email;
         this.createdAt = new Date();
+        this.balance = balance;
     }
     public String getfName() {
         return fName;
@@ -50,4 +52,10 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public double getAccountBalance() {
+        return balance;
+    }
+    public void setAccountBalance(double accountBalance) {
+        this.balance = accountBalance;
+    }
 }
