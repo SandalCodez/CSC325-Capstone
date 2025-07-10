@@ -5,10 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.controllers.StockScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.StockScreenController">
 
    <children>
 
@@ -18,21 +15,97 @@
          </image>
       </ImageView>
 
-      <TextArea layoutX="40.0" layoutY="77.0" prefHeight="115.0" prefWidth="200.0"
-                text="Ticker&#10;Full company name&#10;Live trading price&#10;Day open price&#10;Previous Close&#10;Other relevant info" />
-
-      <TextArea layoutX="40.0" layoutY="216.0" prefHeight="115.0" prefWidth="200.0"
-                text="*if stock is owned y/n*&#10;Amt of shares owned if y&#10;Pnl dollar value&#10;Pnl %&#10;% of total potfolio&#10;Recent news" />
-
-      <Button layoutX="405.0" layoutY="103.0" prefHeight="25.0" prefWidth="101.0" text="Buy" />
-      <Button layoutX="405.0" layoutY="147.0" prefHeight="25.0" prefWidth="101.0" text="Sell" />
-      <Button layoutX="376.0" layoutY="252.0" prefHeight="33.0" prefWidth="163.0"
-              onAction="#handleBackToMainPortfolio" text="Back to Portfolio Overview" />
+      <Button layoutX="376.0" layoutY="56.0" prefHeight="25.0" prefWidth="87.0" text="Buy" />
+      <Button layoutX="481.0" layoutY="56.0" prefHeight="25.0" prefWidth="95.0" text="Sell" />
+      <Button layoutX="396.0" layoutY="14.0" onAction="#handleBackToMainPortfolio" prefHeight="33.0" prefWidth="163.0" text="Back to Portfolio Overview" />
 
       <TextField layoutX="256.0" layoutY="30.0" prefHeight="49.0" prefWidth="101.0" text="!Bears">
          <font>
             <Font size="24.0" />
          </font>
       </TextField>
+      <VBox layoutX="33.0" layoutY="94.0" prefHeight="130.0" prefWidth="223.0">
+         <children>
+            <HBox prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="29.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="67.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox layoutX="33.0" layoutY="224.0" prefHeight="130.0" prefWidth="223.0">
+         <children>
+            <HBox prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="29.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="67.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Label: " textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button layoutX="120.0" layoutY="35.0" prefHeight="25.0" prefWidth="101.0" text="Search" />
+      <TextField layoutX="23.0" layoutY="35.0" prefHeight="25.0" prefWidth="87.0" promptText="Ticker" />
+      <TextArea layoutX="377.0" layoutY="100.0" prefHeight="243.0" prefWidth="197.0" />
    </children>
 </AnchorPane>
