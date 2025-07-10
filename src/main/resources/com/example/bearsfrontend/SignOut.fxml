@@ -8,7 +8,7 @@
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="400.0" fitWidth="600.0">
          <image>
-            <Image url="@images/singoutimg.png" />
+            <Image url="@images/BearsSignOutPage.png" />
          </image>
       </ImageView>
    </children>
