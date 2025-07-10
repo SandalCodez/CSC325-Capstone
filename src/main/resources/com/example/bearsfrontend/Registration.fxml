@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,12 +16,13 @@
             <Image url="@images/defbackground.png" />
          </image>
       </ImageView>
+      <TextField fx:id="fNameField" layoutX="66.0" layoutY="118.0" promptText="First Name" />
+      <Label fx:id="fNameError" layoutX="66.0" layoutY="144.0" prefHeight="18.0" prefWidth="150.0" text="Invalid Format" textFill="RED" />
+      <TextField fx:id="lNameField" layoutX="387.0" layoutY="118.0" promptText="Last Name" />
 
       <TextField fx:id="emailField" layoutX="66.0" layoutY="188.0" promptText="Email" />
-      <TextField fx:id="fNameField" layoutX="66.0" layoutY="118.0" promptText="First Name" />
+      <TextField fx:id="confirmEmailField" layoutX="387.0" layoutY="188.0" promptText="Confirm Email" />
       <TextField fx:id="passwordField" layoutX="66.0" layoutY="258.0" promptText="Password" />
-      <TextField fx:id="lNameField" layoutX="387.0" layoutY="118.0" promptText="Last Name" />
-      <TextField layoutX="387.0" layoutY="188.0" promptText="Confirm Email" />
       <TextField layoutX="387.0" layoutY="258.0" promptText="Confirm Password" />
       <Button layoutX="333.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
       <TextField alignment="CENTER" layoutX="226.0" layoutY="34.0" prefHeight="45.0" prefWidth="149.0" text="!Bears">
@@ -29,6 +31,11 @@
          </font>
       </TextField>
       <Button fx:id="registerBtn" layoutX="200.0" layoutY="312.0" mnemonicParsing="false" onAction="#registerClick" text="Register" />
+      <Label fx:id="emailError" layoutX="65.0" layoutY="214.0" prefHeight="18.0" prefWidth="150.0" text="Invalid Format" textFill="RED" />
+      <Label fx:id="confirmEmailError" layoutX="386.0" layoutY="214.0" prefHeight="18.0" prefWidth="150.0" text="Invalid Format" textFill="RED" />
+      <Label fx:id="lNameError" layoutX="387.0" layoutY="144.0" prefHeight="18.0" prefWidth="150.0" text="Invalid Format" textFill="RED" />
+      <Label fx:id="confPassError" layoutX="387.0" layoutY="284.0" prefHeight="18.0" prefWidth="150.0" text="Invalid Format" textFill="RED" />
+      <Label fx:id="registerError" alignment="CENTER" layoutX="225.0" layoutY="345.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
 
    </children>
 </AnchorPane>

@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -28,6 +29,8 @@ public class SignInController {
     @FXML
     private TextField usernameField;
 
+    @FXML
+    private Label signInErrorLabel;
     @FXML
     private Button devSignIn;
     Firestore firestoreDB = FirestoreClient.getFirestore();
@@ -61,7 +64,7 @@ public class SignInController {
 
         if(email.isEmpty() || password.isEmpty()) {
             // turn this into a label
-            System.out.println("Username and Password are empty");
+            signInErrorLabel.setText("Username and Password are empty");
             return;
 
         }
@@ -84,7 +87,7 @@ public class SignInController {
 
 
             } catch (Exception e) {
-                System.out.println(("Login failed: " + e.getMessage()+"error"));
+                signInErrorLabel.setText("Login failed: " + e.getMessage());
             }
         }
 

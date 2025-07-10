@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -19,7 +20,22 @@ import java.util.Date;
 
 public class RegistrationController {
     @FXML
+    private Label confPassError;
+    @FXML
+    private Label confirmEmailError;
+    @FXML
+    private Label emailError;
+    @FXML
+    private Label fNameError;
+    @FXML
+    private Label lNameError;
+    @FXML
+    private Label registerError;
+    @FXML
     private TextField emailField;
+@FXML
+    private TextField confirmEmailField;
+
 
     @FXML
     private TextField fNameField;
@@ -42,12 +58,30 @@ public class RegistrationController {
 
     @FXML
     void registerClick(ActionEvent event) throws Exception {
+        String email = emailField.getText();
+        String emailConfirm = confirmEmailField.getText();
+        String fName = fNameField.getText();
+        String lName = lNameField.getText();
+        String password = passwordField.getText();
+
+
         Firestore firestoreDB = FirestoreClient.getFirestore();
       UserAuth userAuth = new UserAuth(firestoreDB);
 
       LocalDate today = LocalDate.now();
 
-      userAuth.registerUser(emailField.getText(), passwordField.getText(), fNameField.getText(), lNameField.getText(), today);
+
+      if((email.isEmpty()||fName.isEmpty()||lName.isEmpty()||password.isEmpty())) {
+          registerError.setText("Please fill all the fields");
+          return;
+      }
+      if(!(email.equals(emailConfirm))){
+              confPassError.setText("Please confirm your email.");
+              return;
+      }
+          userAuth.registerUser(emailField.getText(), passwordField.getText(), fNameField.getText(), lNameField.getText(), today);
+
+
 
         emailField.getText();
         fNameField.getText();
