@@ -20,7 +20,7 @@ public class Driver extends Application {
         db.connect();
 
 
-        Scene scene = new Scene(fxmlLoader.load(), 700 , 480);
+//        Scene scene = new Scene(fxmlLoader.load(), 700 , 480);
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
