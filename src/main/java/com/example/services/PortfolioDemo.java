@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Complete working demo of the portfolio system - CORRECTED VERSION
+ */
 public class PortfolioDemo {
 
     public static void main(String[] args) {
@@ -23,7 +26,7 @@ public class PortfolioDemo {
 
             System.out.println("=== Portfolio Management System Demo ===\n");
 
-            // Demo user login
+            // Demo user login (replace with actual credentials)
             demonstrateUserAuth(userAuth, session);
 
             // Demo portfolio operations
@@ -41,21 +44,31 @@ public class PortfolioDemo {
         try {
             System.out.println("=== User Authentication ===");
 
+            // For demo purposes - you would get these from user input
             String email = "testuser@example.com";
             String password = "testpassword123";
 
+            // Try to login (this will fail if user doesn't exist)
             try {
                 User user = userAuth.loginUser(email, password);
-                session.setCurrentUser(user, userAuth.getCurrentUserUid());
+                String uid = userAuth.getCurrentUserUid();
+
+                // FIXED: Use the correct method signature from your UserSession (3 parameters)
+                session.setCurrentUser(user, uid, userAuth);
                 System.out.println("✓ Logged in successfully: " + session.getUserFullName());
             } catch (Exception e) {
                 System.out.println("Login failed, creating new user...");
 
+                // Register new user
                 String uid = userAuth.registerUser(email, password, "Demo", "User", LocalDate.now());
                 System.out.println("✓ Registered new user with UID: " + uid);
 
+                // Now login
                 User user = userAuth.loginUser(email, password);
-                session.setCurrentUser(user, userAuth.getCurrentUserUid());
+                String currentUid = userAuth.getCurrentUserUid();
+
+                // FIXED: Use the correct method signature (3 parameters)
+                session.setCurrentUser(user, currentUid, userAuth);
                 System.out.println("✓ Logged in: " + session.getUserFullName());
             }
 
@@ -63,6 +76,7 @@ public class PortfolioDemo {
 
         } catch (Exception e) {
             System.err.println("Authentication error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -70,15 +84,20 @@ public class PortfolioDemo {
         try {
             System.out.println("=== Portfolio Operations ===");
 
+            // Check current portfolio
             Portfolio portfolio = portfolioService.getUserPortfolio();
             System.out.println("Current portfolio has " + portfolio.getHoldings().size() + " holdings");
 
+            // Buy some stocks
             System.out.println("\nBuying stocks...");
             portfolioService.buyStock("AAPL", 10, 150.00);
             portfolioService.buyStock("GOOGL", 5, 2500.00);
             portfolioService.buyStock("MSFT", 15, 300.00);
-            portfolioService.buyStock("AAPL", 5, 155.00); // Buy more AAPL
 
+            // Buy more of the same stock (should update average price)
+            portfolioService.buyStock("AAPL", 5, 155.00);
+
+            // Display current holdings
             portfolio = portfolioService.getUserPortfolio();
             System.out.println("\n--- Current Holdings ---");
             for (PortfolioEntry entry : portfolio.getHoldings()) {
@@ -91,9 +110,11 @@ public class PortfolioDemo {
                 );
             }
 
+            // Refresh prices with live data
             System.out.println("\nRefreshing with live prices...");
             portfolioService.refreshPortfolioPrices();
 
+            // Show updated portfolio
             portfolio = portfolioService.getUserPortfolio();
             System.out.println("\n--- Updated Holdings ---");
             for (PortfolioEntry entry : portfolio.getHoldings()) {
@@ -106,6 +127,7 @@ public class PortfolioDemo {
                 );
             }
 
+            // Portfolio summary
             Map<String, Object> summary = portfolioService.getPortfolioSummary();
             System.out.println("\n--- Portfolio Summary ---");
             System.out.printf("User: %s%n", summary.get("userName"));
@@ -114,9 +136,11 @@ public class PortfolioDemo {
             System.out.printf("Unrealized P&L: $%.2f (%.2f%%)%n",
                     summary.get("totalUnrealizedGainLoss"), summary.get("percentageGainLoss"));
 
+            // Sell some shares
             System.out.println("\nSelling 5 shares of AAPL...");
             portfolioService.sellStock("AAPL", 5, 152.00);
 
+            // Show transaction history
             List<Transaction> transactions = portfolioService.getTransactionHistory();
             System.out.println("\n--- Recent Transactions ---");
             for (int i = 0; i < Math.min(5, transactions.size()); i++) {
@@ -143,6 +167,7 @@ public class PortfolioDemo {
         try {
             System.out.println("=== Market Data ===");
 
+            // Get real-time stock quote
             String ticker = "AAPL";
             Stock stock = portfolioService.getStockQuote(ticker);
             System.out.printf("%s (%s): $%.2f%n",
@@ -150,15 +175,18 @@ public class PortfolioDemo {
             System.out.printf("Day Range: $%.2f - $%.2f%n", stock.getLow(), stock.getHigh());
             System.out.printf("Previous Close: $%.2f%n", stock.getPreviousClose());
 
+            // Market status
             boolean isOpen = portfolioService.isMarketOpen();
             System.out.println("Market Status: " + (isOpen ? "OPEN" : "CLOSED"));
 
+            // Market news
             System.out.println("\n--- Market News ---");
             List<String> marketNews = portfolioService.getMarketNews();
             for (int i = 0; i < Math.min(3, marketNews.size()); i++) {
                 System.out.println("• " + marketNews.get(i));
             }
 
+            // Company-specific news
             System.out.println("\n--- " + ticker + " News ---");
             List<String> companyNews = portfolioService.getCompanyNews(ticker);
             for (int i = 0; i < Math.min(2, companyNews.size()); i++) {
