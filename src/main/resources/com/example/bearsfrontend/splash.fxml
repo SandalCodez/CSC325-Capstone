@@ -7,7 +7,7 @@
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0">
          <image>
-            <Image url="@images/splashimg.png" />
+            <Image url="@images/BearsSplashScreen.png" />
          </image>
       </ImageView>
    </children>
