@@ -6,6 +6,7 @@ public class UserSession {
     private static UserSession instance;
     private User currentUser;
     private String userUid; // Store Firebase UID separately
+    private UserAuth userAuth;
 
     // Private constructor to prevent direct instantiation
     private UserSession() {
@@ -22,9 +23,10 @@ public class UserSession {
     }
 
     // Set current logged-in user
-    public void setCurrentUser(User user, String uid) {
+    public void setCurrentUser(User user, String uid, UserAuth userAuth) {
         this.currentUser = user;
         this.userUid = uid;
+        this.userAuth = userAuth;
     }
 
     // Get current user
@@ -36,6 +38,8 @@ public class UserSession {
     public String getUserUid() {
         return userUid;
     }
+
+    public UserAuth getUserAuth() {return userAuth;}
 
     // Check if user is logged in
     public boolean isLoggedIn() {
@@ -82,4 +86,6 @@ public class UserSession {
         }
         return "Session: Not logged in";
     }
+
+
 }

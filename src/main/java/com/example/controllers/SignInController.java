@@ -75,7 +75,7 @@ public class SignInController {
                 String uid = userAuth.getCurrentUserUid();
 
                 // Store in session with both User object and UID
-                UserSession.getInstance().setCurrentUser(user, uid);
+                UserSession.getInstance().setCurrentUser(user, uid, userAuth);
 
                 System.out.println(("Login successful! Welcome " + user.getfName()+ "success"));
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));

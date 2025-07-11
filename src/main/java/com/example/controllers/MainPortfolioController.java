@@ -1,6 +1,7 @@
 package com.example.controllers;
 
-import com.example.services.ChatGPTClient;
+import com.example.models.User;
+import com.example.services.*;
 import com.example.models.PortfolioEntry;
 import com.example.models.Portfolio;
 import com.example.models.Transaction;
@@ -27,6 +28,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class MainPortfolioController {
 
@@ -57,7 +59,6 @@ public class MainPortfolioController {
     @FXML
     private Button sendBtn;
 
-    // Portfolio Summary Labels (you might want to add these to your FXML)
     @FXML
     private Label totalValueLabel;
 
@@ -67,10 +68,18 @@ public class MainPortfolioController {
     @FXML
     private Label percentageGainLossLabel;
 
+    @FXML
+    private Label balanceLabel;
+
+    @FXML
+    private Button addFundsButton;
+
     private final FinnhubService finnhubService = new FinnhubService();
     private final ObservableList<PortfolioEntry> portfolioData = FXCollections.observableArrayList();
     private PortfolioIntegration portfolioService;
     private UserSession userSession;
+    private User loggedInUser;
+    private UserAuth userAuth;
 
     public void initialize() {
         try {
@@ -79,9 +88,18 @@ public class MainPortfolioController {
             Firestore db = firestoreDB.connect();
             portfolioService = new PortfolioIntegration(db);
             userSession = UserSession.getInstance();
+            userAuth = UserSession.getInstance().getUserAuth();
+            loggedInUser = UserSession.getInstance().getCurrentUser();
 
             // Set up table columns
             setupTableColumns();
+
+            // Update balance label
+            if (loggedInUser != null) {
+                balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+            } else {
+                balanceLabel.setText("Not Available");
+            }
 
             // Load real portfolio data if user is logged in
             if (userSession.isLoggedIn()) {
@@ -415,9 +433,46 @@ public class MainPortfolioController {
         }
     }
 
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+        if (balanceLabel != null) {
+            balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+        }
+    }
+
+    @FXML
+    private void handleAddFunds(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("0.0");
+        dialog.setTitle("Add Funds");
+        dialog.setHeaderText("Add funds to balance");
+        dialog.setContentText("Please enter amount");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(input -> {
+            try {
+                double amountToAdd = Double.parseDouble(input.trim());
+
+                if (amountToAdd < 0) {
+                    showAlert("Invalid input", "Must be positive amount");
+                    return;
+                }
+
+                double newBalance = loggedInUser.getAccountBalance() + amountToAdd;
+                loggedInUser.setAccountBalance(newBalance);
+                balanceLabel.setText(String.format("$%.2f", newBalance));
+
+                String uid = UserSession.getInstance().getUserUid();
+                userAuth.updateUserBalance(uid, newBalance);
+            } catch (NumberFormatException e) {
+                showAlert("Invalid input", "Please enter a valid number");
+            }
+        });
+    }
+
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }

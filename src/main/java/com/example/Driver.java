@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 
@@ -18,9 +17,6 @@ public class Driver extends Application {
 
         FirestoreDB db = new FirestoreDB();
         db.connect();
-
-
-//        Scene scene = new Scene(fxmlLoader.load(), 700 , 480);
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
