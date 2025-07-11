@@ -1,6 +1,9 @@
 package com.example.controllers;
 
 import com.example.services.FirestoreDB;
+import com.example.services.UserAuth;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.cloud.FirestoreClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class RegistrationController {
     @FXML
@@ -36,9 +41,14 @@ public class RegistrationController {
     }
 
     @FXML
-    void registerClick(ActionEvent event) {
-        FirestoreDB db = new FirestoreDB();
-        db.connect();
+    void registerClick(ActionEvent event) throws Exception {
+        Firestore firestoreDB = FirestoreClient.getFirestore();
+      UserAuth userAuth = new UserAuth(firestoreDB);
+
+      LocalDate today = LocalDate.now();
+
+      userAuth.registerUser(emailField.getText(), passwordField.getText(), fNameField.getText(), lNameField.getText(), today);
+
         emailField.getText();
         fNameField.getText();
         lNameField.getText();
