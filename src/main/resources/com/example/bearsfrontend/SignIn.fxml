@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -29,6 +30,7 @@
       <TextField fx:id="usernameField" layoutX="226.0" layoutY="205.0" onAction="#handleSubmit" onMouseClicked="#clearUsername" prefHeight="25.0" prefWidth="149.0" promptText="Username" />
       <TextField fx:id="passwordField" layoutX="226.0" layoutY="245.0" onAction="#handleSubmit" onMouseClicked="#clearPassword" prefHeight="25.0" prefWidth="149.0" promptText="Password" />
       <Button fx:id="devSignIn" layoutX="489.0" layoutY="293.0" mnemonicParsing="false" onAction="#psuedoLogin" text="devSignIn" />
+      <Label fx:id="signInErrorLabel" alignment="CENTER" layoutX="69.0" layoutY="271.0" prefHeight="18.0" prefWidth="457.0" textAlignment="CENTER" textFill="RED" />
 
    </children>
 </AnchorPane>

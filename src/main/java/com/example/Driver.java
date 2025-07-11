@@ -18,7 +18,6 @@ public class Driver extends Application {
         FirestoreDB db = new FirestoreDB();
         db.connect();
 
-
         stage.setTitle("Sign In");
         stage.setScene(scene);
         stage.show();
