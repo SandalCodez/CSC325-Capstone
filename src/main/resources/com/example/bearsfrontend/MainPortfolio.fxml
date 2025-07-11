@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -8,6 +10,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.MainPortfolioController">
@@ -27,9 +31,7 @@
 
       <TextArea layoutX="40.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0" text="Snapshot - overall account value&#10;Daily / all time pnl&#10;Notabe assets held" />
 
-      <TextArea fx:id="chatArea" editable="false" layoutX="366.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0" promptText="Chat Field" />
-
-      <TextArea fx:id="marketNewsArea" layoutX="366.0" layoutY="117.0" prefHeight="59.0" prefWidth="200.0" text="Market news" />
+      <TextArea fx:id="marketNewsArea" layoutX="40.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0" text="Market news" />
 
       <TableView fx:id="portfolioTable" layoutX="40.0" layoutY="259.0" prefHeight="127.0" prefWidth="526.0">
          <columns>
@@ -43,14 +45,33 @@
          </columns>
       </TableView>
 
-      <TextField alignment="TOP_CENTER" layoutX="228.0" layoutY="19.0" prefHeight="77.0" prefWidth="152.0" text="!Bears">
+      <TextField alignment="TOP_CENTER" editable="false" layoutX="228.0" layoutY="19.0" prefHeight="77.0" prefWidth="152.0" text="!Bears">
          <font>
             <Font size="36.0" />
          </font>
       </TextField>
 
       <TextField fx:id="StockSearchField" alignment="CENTER" layoutX="466.0" layoutY="72.0" onAction="#handleEnter" onMouseClicked="#clearStockSearch" prefHeight="25.0" prefWidth="84.0" text="Stock Search" />
-      <TextField fx:id="userInput" layoutX="40.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0" promptText="Ask ChatGPT" />
-      <Button fx:id="sendBtn" layoutX="173.0" layoutY="207.0" mnemonicParsing="false" onAction="#onSend" text="Send" />
+      <VBox layoutX="330.0" layoutY="115.0" prefHeight="135.0" prefWidth="230.0" spacing="6.0" style="-fx-background-color: #23272f; -fx-border-color: #4f8cff; -fx-border-radius: 10; -fx-padding: 8;">
+         <children>
+            <Label style="-fx-text-fill: #4f8cff;" text="Ask ChatGPT">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="60.0" prefWidth="200.0">
+               <content>
+                  <VBox fx:id="chatHistoryBox" spacing="4.0" />
+               </content>
+            </ScrollPane>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <TextField fx:id="userInput" promptText="Have a question?" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#onSend" text="Send" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+
    </children>
 </AnchorPane>
