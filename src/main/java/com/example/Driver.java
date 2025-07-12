@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-
 public class Driver extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -17,7 +16,6 @@ public class Driver extends Application {
 
         FirestoreDB db = new FirestoreDB();
         db.connect();
-
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
