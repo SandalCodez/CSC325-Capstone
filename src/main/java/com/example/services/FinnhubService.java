@@ -44,17 +44,13 @@ public class FinnhubService {
                 // Fetch quote
                 JSONObject quoteJson = fetchJsonFromUrl(quoteUrl);
                 double currentPrice = quoteJson.optDouble("c", 0.0);
-                double high = quoteJson.optDouble("h", 0.0);
-                double low = quoteJson.optDouble("l", 0.0);
-                double open = quoteJson.optDouble("o", 0.0);
-                double previousClose = quoteJson.optDouble("pc", 0.0);
                 double volume = quoteJson.optDouble("v", 0.0);
 
                 // Fetch company name
                 JSONObject companyJson = fetchJsonFromUrl(companyUrl);
                 String companyName = companyJson.optString("name", ticker);
 
-                Stock stock = new Stock(ticker, companyName, currentPrice, high, low, open, volume, previousClose);
+                Stock stock = new Stock(ticker, companyName, currentPrice, volume);
                 stockMap.put(ticker, stock);
 
             } catch (Exception e) {

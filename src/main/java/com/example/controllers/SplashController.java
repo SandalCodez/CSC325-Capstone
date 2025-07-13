@@ -1,5 +1,9 @@
 package com.example.controllers;
 
+import com.example.models.Portfolio;
+import com.example.services.FirestoreDB;
+import com.example.services.PortfolioIntegration;
+import com.example.services.UserAuth;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,15 +15,40 @@ import javafx.util.Duration;
 
 public class SplashController {
 
+    private FirestoreDB db;
+    private Portfolio portfolio;
+    private UserAuth userAuth;
+    private PortfolioIntegration portfolioIntegration;
+
     @FXML
     private AnchorPane splashRoot;
 
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.portfolioIntegration = portfolioIntegration;
+    }
+
+    public void setFirestoreDB(FirestoreDB db) {
+        this.db = db;
+    }
+
     @FXML
     public void initialize() {
+       startTransition();
+    }
+
+    public void startTransition() {
         PauseTransition delay = new PauseTransition(Duration.seconds(3));
         delay.setOnFinished(event -> {
             try {
-                Parent signInRoot = FXMLLoader.load(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
+                Parent signInRoot = loader.load();
+
+                SignInController controller = loader.getController();
+                controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);  // <-- Pass db correctly after load()
+
                 Stage stage = (Stage) splashRoot.getScene().getWindow();
                 stage.setScene(new Scene(signInRoot));
                 stage.setTitle("Sign In");
@@ -29,5 +58,7 @@ public class SplashController {
             }
         });
         delay.play();
+
     }
 }
+

@@ -66,7 +66,10 @@ public class UserAuth {
             String uid = userRecord.getUid();
 
             // Get user data from Firestore
-            DocumentSnapshot doc = db.collection("users").document(uid).get().get();
+            DocumentSnapshot doc = db.collection("users")
+                    .document(uid)
+                    .get()
+                    .get();
 
             if (!doc.exists()) {
                 throw new Exception("User data not found");
@@ -94,7 +97,7 @@ public class UserAuth {
             System.out.println("Checking for balance field...");
 
             double balance = 0.0;
-            if (doc.contains("balance")) {
+            if (doc.exists() && doc.contains("balance")) {
                 try {
                     balance = doc.getDouble("balance");
                 } catch (Exception e) {

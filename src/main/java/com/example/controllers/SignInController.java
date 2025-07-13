@@ -1,10 +1,9 @@
 
 package com.example.controllers;
 
+import com.example.models.Portfolio;
 import com.example.models.User;
-import com.example.services.FirebaseAuthService;
-import com.example.services.UserAuth;
-import com.example.services.UserSession;
+import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import javafx.event.ActionEvent;
@@ -33,10 +32,30 @@ public class SignInController {
     private Label signInErrorLabel;
     @FXML
     private Button devSignIn;
-    Firestore firestoreDB = FirestoreClient.getFirestore();
-    UserAuth userAuth = new UserAuth(firestoreDB);
 
+    private FirestoreDB db;
+    private UserAuth userAuth;
     private FirebaseAuthService firebaseAuthService;
+    private PortfolioIntegration portfolioIntegration;
+    private Portfolio portfolio;
+
+
+    public SignInController() {}
+
+    public SignInController(FirestoreDB db) {
+        this.db = db;
+    }
+
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.portfolioIntegration = portfolioIntegration;
+    }
+
+    public void setFirestoreDB(FirestoreDB db) {
+        this.db = db;
+    }
 
 //===================================DELETE THIS========================================
     //*** Developer bypass
@@ -77,21 +96,30 @@ public class SignInController {
                 // Store in session with both User object and UID
                 UserSession.getInstance().setCurrentUser(user, uid, userAuth);
 
-                System.out.println(("Login successful! Welcome " + user.getfName()+ "success"));
+                System.out.println(("Login successful! Welcome " + user.getfName()+ ", success"));
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
                 Parent MainPortfolioRoot = fxmlLoader.load();
+
+                MainPortfolioController controller = fxmlLoader.getController();
+
+                controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);
+
+                db.setPortfolioIntegration(portfolioIntegration);
+
+                controller.setLoggedInUser(user);
+
+                controller.initializeData();
+
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(MainPortfolioRoot));
                 stage.setTitle("MainPortfolio");
                 stage.show();
 
-
             } catch (Exception e) {
                 signInErrorLabel.setText("Login failed: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-
-
 
 
 
@@ -120,5 +148,6 @@ public class SignInController {
     private void clearPassword(MouseEvent event) {
         passwordField.clear();
     }
+
 }
 

@@ -5,6 +5,7 @@ import com.google.cloud.firestore.annotation.IgnoreExtraProperties;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 @IgnoreExtraProperties
 public class Transaction {
@@ -14,12 +15,12 @@ public class Transaction {
     private int quantity;
     private double pricePerShare;
     private boolean isBuy;
-    private LocalDateTime timestamp;
+    private Date timestamp;
 
     public Transaction() {
     }
 
-    public Transaction(String id, String tickerSymbol, int quantity, double pricePerShare, Boolean isBuy, LocalDateTime timestamp) {
+    public Transaction(String id, String tickerSymbol, int quantity, double pricePerShare, Boolean isBuy, Date timestamp) {
         this.id = id;
         this.tickerSymbol = tickerSymbol;
         this.quantity = quantity;
@@ -76,11 +77,11 @@ public class Transaction {
         this.isBuy = isBuy;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 }

@@ -5,6 +5,8 @@ import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ import java.util.Map;
  * Complete working demo of the portfolio system - CORRECTED VERSION
  */
 public class PortfolioDemo {
-
+/**
     public static void main(String[] args) {
         try {
             // Initialize Firebase
@@ -88,14 +90,19 @@ public class PortfolioDemo {
             Portfolio portfolio = portfolioService.getUserPortfolio();
             System.out.println("Current portfolio has " + portfolio.getHoldings().size() + " holdings");
 
+            LocalDate localDate = LocalDate.of(2025, 7, 12);
+            Date buyDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+
             // Buy some stocks
             System.out.println("\nBuying stocks...");
-            portfolioService.buyStock("AAPL", 10, 150.00);
-            portfolioService.buyStock("GOOGL", 5, 2500.00);
-            portfolioService.buyStock("MSFT", 15, 300.00);
+            portfolioService.buyStock("AAPL", 10, 150.00, buyDate);
+            portfolioService.buyStock("GOOGL", 5, 2500.00, buyDate);
+            portfolioService.buyStock("MSFT", 15, 300.00, buyDate);
+
 
             // Buy more of the same stock (should update average price)
-            portfolioService.buyStock("AAPL", 5, 155.00);
+            portfolioService.buyStock("AAPL", 5, 155.00, buyDate);
 
             // Display current holdings
             portfolio = portfolioService.getUserPortfolio();
@@ -104,9 +111,7 @@ public class PortfolioDemo {
                 System.out.printf("%-6s | %3d shares | Avg: $%8.2f | Current: $%8.2f | P&L: $%8.2f%n",
                         entry.getTickerSymbol(),
                         entry.getTotalShares(),
-                        entry.getAverageBuyPrice(),
-                        entry.getCurrentMarketPrice(),
-                        entry.getUnrealizedGainLoss()
+                        entry.getBuyPrice()
                 );
             }
 
@@ -121,9 +126,8 @@ public class PortfolioDemo {
                 System.out.printf("%-6s | %3d shares | Avg: $%8.2f | Current: $%8.2f | P&L: $%8.2f%n",
                         entry.getTickerSymbol(),
                         entry.getTotalShares(),
-                        entry.getAverageBuyPrice(),
-                        entry.getCurrentMarketPrice(),
-                        entry.getUnrealizedGainLoss()
+                        entry.getBuyPrice()
+
                 );
             }
 
@@ -138,7 +142,7 @@ public class PortfolioDemo {
 
             // Sell some shares
             System.out.println("\nSelling 5 shares of AAPL...");
-            portfolioService.sellStock("AAPL", 5, 152.00);
+            portfolioService.sellStock("AAPL", 5, 152.00, );
 
             // Show transaction history
             List<Transaction> transactions = portfolioService.getTransactionHistory();
@@ -172,8 +176,8 @@ public class PortfolioDemo {
             Stock stock = portfolioService.getStockQuote(ticker);
             System.out.printf("%s (%s): $%.2f%n",
                     stock.getCompanyName(), stock.getTickerSymbol(), stock.getCurrentPrice());
-            System.out.printf("Day Range: $%.2f - $%.2f%n", stock.getLow(), stock.getHigh());
-            System.out.printf("Previous Close: $%.2f%n", stock.getPreviousClose());
+            //System.out.printf("Day Range: $%.2f - $%.2f%n", stock.getLow(), stock.getHigh());
+            //System.out.printf("Previous Close: $%.2f%n", stock.getPreviousClose());
 
             // Market status
             boolean isOpen = portfolioService.isMarketOpen();
@@ -196,5 +200,5 @@ public class PortfolioDemo {
         } catch (Exception e) {
             System.err.println("Market data error: " + e.getMessage());
         }
-    }
+    }**/
 }

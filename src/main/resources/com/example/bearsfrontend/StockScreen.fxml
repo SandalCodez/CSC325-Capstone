@@ -15,7 +15,7 @@
          </image>
       </ImageView>
 
-      <Button fx:id="buyButton" layoutX="376.0" layoutY="56.0" prefHeight="25.0" prefWidth="87.0" text="Buy" />
+      <Button fx:id="buyButton" layoutX="376.0" layoutY="56.0" onAction="#handleBuyButtonClick" prefHeight="25.0" prefWidth="87.0" text="Buy" />
       <Button fx:id="sellButton" layoutX="475.0" layoutY="56.0" prefHeight="25.0" prefWidth="95.0" text="Sell" />
       <Button fx:id="backToPortfolioButton" layoutX="376.0" layoutY="14.0" onAction="#handleBackToMainPortfolio" prefHeight="33.0" prefWidth="194.0" text="Back to Portfolio Overview" />
 

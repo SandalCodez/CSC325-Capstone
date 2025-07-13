@@ -1,15 +1,14 @@
 package com.example.controllers;
 
+import com.example.models.Stock;
 import com.example.models.User;
 import com.example.services.*;
 import com.example.models.PortfolioEntry;
 import com.example.models.Portfolio;
-import com.example.models.Transaction;
 import com.example.services.FinnhubService;
 import com.example.services.PortfolioIntegration;
 import com.example.services.FirestoreDB;
 import com.example.services.UserSession;
-import com.google.cloud.firestore.Firestore;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +24,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,16 +52,10 @@ public class MainPortfolioController {
     private TextArea marketNewsArea;
 
     @FXML
-    private TextField StockSearchField;
-
-    @FXML
     private TextField userInput;
 
     @FXML
     private TextArea chatArea;
-
-    @FXML
-    private Button sendBtn;
 
     @FXML
     private Label totalValueLabel;
@@ -72,43 +70,38 @@ public class MainPortfolioController {
     private Label balanceLabel;
 
     @FXML
-    private Button addFundsButton;
+    private Button addFundsButton, StockSearchButton, sendBtn;
 
     private final FinnhubService finnhubService = new FinnhubService();
     private final ObservableList<PortfolioEntry> portfolioData = FXCollections.observableArrayList();
-    private PortfolioIntegration portfolioService;
     private UserSession userSession;
     private User loggedInUser;
     private UserAuth userAuth;
+    private FirestoreDB db;
+    private PortfolioIntegration portfolioIntegration;
+    private Portfolio portfolio;
 
-    public void initialize() {
+    public void setFirestoreDB(FirestoreDB db) {
+        this.db = db;
+        this.portfolioIntegration = db.getPortfolioIntegration();
+    }
+
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.portfolioIntegration = portfolioIntegration;
+    }
+
+
+
+    @FXML
+    public void initialize() throws ParseException {
         try {
-            // Initialize Firebase and portfolio service
-            FirestoreDB firestoreDB = new FirestoreDB();
-            Firestore db = firestoreDB.connect();
-            portfolioService = new PortfolioIntegration(db);
-            userSession = UserSession.getInstance();
-            userAuth = UserSession.getInstance().getUserAuth();
-            loggedInUser = UserSession.getInstance().getCurrentUser();
 
-            // Set up table columns
             setupTableColumns();
 
-            // Update balance label
-            if (loggedInUser != null) {
-                balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
-            } else {
-                balanceLabel.setText("Not Available");
-            }
-
-            // Load real portfolio data if user is logged in
-            if (userSession.isLoggedIn()) {
-                loadRealPortfolioData();
-                loadPortfolioSummary();
-            } else {
-                // Fallback to test data if no user is logged in
-                loadTestData();
-            }
+            loadTestData();
 
             portfolioTable.setItems(portfolioData);
             loadMarketNews();
@@ -124,12 +117,40 @@ public class MainPortfolioController {
         }
     }
 
+    public void initializeData() {
+        try {
+            userSession = UserSession.getInstance();
+            userAuth = userSession.getInstance().getUserAuth();
+            loggedInUser = userSession.getInstance().getCurrentUser();
+
+            setupTableColumns();
+
+            if (loggedInUser != null) {
+                balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+            } else {
+                balanceLabel.setText("Not Available");
+            }
+
+            if (userSession.isLoggedIn()) {
+                loadRealPortfolioData();
+                loadPortfolioSummary();
+            } else {
+                loadTestData();
+            }
+
+            portfolioTable.setItems(portfolioData);
+            loadMarketNews();
+        } catch (Exception e) {
+            System.err.println("Error initializing portfolio: " + e.getMessage());
+        }
+    }
+
     private void setupTableColumns() {
         tickerColumn.setCellValueFactory(new PropertyValueFactory<>("tickerSymbol"));
         companyColumn.setCellValueFactory(new PropertyValueFactory<>("companyName"));
         sharesColumn.setCellValueFactory(new PropertyValueFactory<>("totalShares"));
-        avgBuyColumn.setCellValueFactory(new PropertyValueFactory<>("averageBuyPrice"));
-        currentPriceColumn.setCellValueFactory(new PropertyValueFactory<>("currentMarketPrice"));
+        avgBuyColumn.setCellValueFactory(new PropertyValueFactory<>("buyPrice"));
+        currentPriceColumn.setCellValueFactory(new PropertyValueFactory<>("currentPrice"));
         unrealizedGainColumn.setCellValueFactory(new PropertyValueFactory<>("unrealizedGainLoss"));
         totalValueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
 
@@ -192,15 +213,20 @@ public class MainPortfolioController {
     }
 
     private void loadRealPortfolioData() {
-        Task<Void> loadTask = new Task<Void>() {
+        Task<Void> loadTask = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 try {
-                    // Refresh prices first
-                    portfolioService.refreshPortfolioPrices();
+                    PortfolioIntegration integration = db.getPortfolioIntegration();
+                    if (integration == null) {
+                        throw new IllegalStateException("PortfolioIntegration is not set in FirestoreDB!");
+                    }
+
+                    // Refresh prices
+                    integration.refreshPortfolioPrices();
 
                     // Get updated portfolio
-                    Portfolio portfolio = portfolioService.getUserPortfolio();
+                    Portfolio portfolio = integration.getUserPortfolio();
 
                     Platform.runLater(() -> {
                         portfolioData.clear();
@@ -210,7 +236,7 @@ public class MainPortfolioController {
                 } catch (Exception e) {
                     Platform.runLater(() -> {
                         System.err.println("Error loading portfolio: " + e.getMessage());
-                        // Show error in UI if needed
+                        e.printStackTrace();
                         showAlert("Error", "Failed to load portfolio: " + e.getMessage());
                     });
                 }
@@ -226,7 +252,7 @@ public class MainPortfolioController {
             @Override
             protected Void call() throws Exception {
                 try {
-                    Map<String, Object> summary = portfolioService.getPortfolioSummary();
+                    Map<String, Object> summary = db.getPortfolioIntegration().getPortfolioSummary();
 
                     Platform.runLater(() -> {
                         // Update summary labels if they exist in your FXML
@@ -245,6 +271,7 @@ public class MainPortfolioController {
 
                 } catch (Exception e) {
                     System.err.println("Error loading portfolio summary: " + e.getMessage());
+                    e.printStackTrace();
                 }
                 return null;
             }
@@ -299,7 +326,14 @@ public class MainPortfolioController {
 
     @FXML
     private void handleToStockScreen(ActionEvent event) throws IOException {
-        navigateToStockScreen(null);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/StockScreen.fxml"));
+        Parent stockScreenRoot = fxmlLoader.load();
+        StockScreenController controller = fxmlLoader.getController();
+        controller.setDependencies(this.db, this.userAuth, this.portfolio, this.portfolioIntegration);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(stockScreenRoot));
+        stage.setTitle("Stock Screen");
+        stage.show();
     }
 
     private void navigateToStockScreen(String ticker) throws IOException {
@@ -318,18 +352,6 @@ public class MainPortfolioController {
         stage.show();
     }
 
-    @FXML
-    private void clearStockSearch(MouseEvent event) {
-        StockSearchField.clear();
-    }
-
-    @FXML
-    private void handleEnter(ActionEvent event) throws IOException {
-        String input = StockSearchField.getText().trim().toUpperCase();
-        if (!input.isEmpty()) {
-            navigateToStockScreen(input);
-        }
-    }
 
     private void loadMarketNews() {
         Task<Void> newsTask = new Task<Void>() {
@@ -358,12 +380,16 @@ public class MainPortfolioController {
         new Thread(newsTask).start();
     }
 
-    private void loadTestData() {
-        portfolioData.add(new PortfolioEntry(
-                "AAPL", "Apple Inc", 10, 150.0, 180.0, 300.0, 1800.0));
+    private void loadTestData() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date aaplDate = sdf.parse("07/12/2025");
+        Date tslaDate = sdf.parse("07/12/2025");
 
         portfolioData.add(new PortfolioEntry(
-                "TSLA", "Tesla Inc", 8, 700.0, 750.0, 400.0, 6000.0));
+                "AAPL", 10, 150.0, aaplDate));
+
+        portfolioData.add(new PortfolioEntry(
+                "TSLA", 8, 700.0, tslaDate));
     }
 
     @FXML
@@ -408,8 +434,8 @@ public class MainPortfolioController {
                 return "User is not logged in. No portfolio data available.";
             }
 
-            Map<String, Object> summary = portfolioService.getPortfolioSummary();
-            Portfolio portfolio = portfolioService.getUserPortfolio();
+            Map<String, Object> summary = portfolioIntegration.getPortfolioSummary();
+            Portfolio portfolio = portfolioIntegration.getUserPortfolio();
 
             StringBuilder context = new StringBuilder();
             context.append("Portfolio Context for ").append(userSession.getUserFullName()).append(":\n");
@@ -420,10 +446,14 @@ public class MainPortfolioController {
 
             context.append("Current Holdings:\n");
             for (PortfolioEntry entry : portfolio.getHoldings()) {
+                Stock stock = finnhubService.getQuoteForTicker(entry.getTickerSymbol());
+                double pgl = (stock.getCurrentPrice() - entry.getBuyPrice()) * entry.getTotalShares();
+
                 context.append("- ").append(entry.getTickerSymbol())
-                        .append(" (").append(entry.getCompanyName()).append("): ")
+                        .append(": ")
                         .append(entry.getTotalShares()).append(" shares, ")
-                        .append("P&L: $").append(String.format("%.2f", entry.getUnrealizedGainLoss())).append("\n");
+                        .append("P&L: $").append(String.format("%.2f", pgl))
+                        .append("\n");
             }
 
             return context.toString();
@@ -438,6 +468,7 @@ public class MainPortfolioController {
         if (balanceLabel != null) {
             balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
         }
+        initializeData();
     }
 
     @FXML
@@ -475,5 +506,9 @@ public class MainPortfolioController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void setPortfolioIntegration(PortfolioIntegration portfolioIntegration) {
+        this.portfolioIntegration = portfolioIntegration;
     }
 }

@@ -43,8 +43,6 @@
             <Font size="36.0" />
          </font>
       </TextField>
-
-      <TextField fx:id="StockSearchField" alignment="CENTER" layoutX="466.0" layoutY="72.0" onAction="#handleEnter" onMouseClicked="#clearStockSearch" prefHeight="25.0" prefWidth="84.0" text="Stock Search" />
       <TextField fx:id="userInput" layoutX="40.0" layoutY="190.0" prefHeight="59.0" prefWidth="200.0" promptText="Ask ChatGPT" />
       <Button fx:id="sendBtn" layoutX="173.0" layoutY="207.0" mnemonicParsing="false" onAction="#onSend" text="Send" />
       <HBox layoutX="27.0" layoutY="21.0" prefHeight="42.0" prefWidth="168.0">
@@ -53,5 +51,6 @@
             <Label fx:id="balanceLabel" textFill="WHITE" />
          </children>
       </HBox>
+      <Button fx:id="StockSearchButton" layoutX="466.0" layoutY="72.0" mnemonicParsing="false" onAction="#handleToStockScreen" prefHeight="25.0" prefWidth="84.0" text="Stock Search" />
    </children>
 </AnchorPane>
