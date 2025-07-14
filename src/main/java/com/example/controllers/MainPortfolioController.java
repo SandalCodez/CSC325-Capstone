@@ -55,7 +55,7 @@ public class MainPortfolioController {
     private TextField userInput;
 
     @FXML
-    private TextArea chatArea;
+    private VBox chatArea;
 
     @FXML
     private Button sendBtn;
@@ -368,9 +368,6 @@ public class MainPortfolioController {
     }
 
     @FXML private VBox chatHistoryBox;
-    @FXML private TextField userInput;
-    @FXML private Button sendBtn;
-
 
     @FXML
     protected void onSend() {
@@ -384,12 +381,12 @@ public class MainPortfolioController {
             userInput.clear();
 
             // Loading message
-            chatArea.appendText("AI: ...thinking...\n");
             Label thinkingLabel = new Label("AI: ...thinking...");
             thinkingLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
             thinkingLabel.setWrapText(true);
             thinkingLabel.setMaxWidth(200);
             chatHistoryBox.getChildren().add(thinkingLabel);
+
 
             new Thread(() -> {
                 try {
@@ -400,17 +397,21 @@ public class MainPortfolioController {
                     String aiReply = ChatGPTClient.ask(enhancedPrompt);
                     Platform.runLater(() -> {
                         // Remove the "thinking" message and add the real response
-                        String currentText = chatArea.getText();
-                        String withoutThinking = currentText.replace("AI: ...thinking...\n", "");
-                        chatArea.setText(withoutThinking);
-                        chatArea.appendText("AI: " + aiReply.trim() + "\n\n");
+                        chatHistoryBox.getChildren().remove(thinkingLabel);
+                        Label aiLabel = new Label("AI: " + aiReply.trim());
+                        aiLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                        aiLabel.setWrapText(true);
+                        aiLabel.setMaxWidth(300);
+                        chatHistoryBox.getChildren().add(aiLabel);
                     });
                 } catch (Exception ex) {
                     Platform.runLater(() -> {
-                        String currentText = chatArea.getText();
-                        String withoutThinking = currentText.replace("AI: ...thinking...\n", "");
-                        chatArea.setText(withoutThinking);
-                        chatArea.appendText("AI: (Error: " + ex.getMessage() + ")\n\n");
+                        chatHistoryBox.getChildren().remove(thinkingLabel);
+                        Label errorLabel = new Label("AI: (Error: " + ex.getMessage() + ")");
+                        errorLabel.setStyle("-fx-background-color: #ff4f4f; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                        errorLabel.setWrapText(true);
+                        errorLabel.setMaxWidth(300);
+                        chatHistoryBox.getChildren().add(errorLabel);
                     });
                 }
             }).start();
