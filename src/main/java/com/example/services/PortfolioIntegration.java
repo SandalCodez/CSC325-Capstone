@@ -79,7 +79,6 @@ public class PortfolioIntegration {
             updatedEntry = PortfolioEntry.fromStock(stockData, quantity, pricePerShare);
         }
 
-        this.portfolio.addOrUpdateEntry(updatedEntry);
         saveTransaction(tickerSymbol.toUpperCase(), quantity, pricePerShare, true, buyDate);
         savePortfolio(this.portfolio);
 
@@ -340,15 +339,6 @@ public class PortfolioIntegration {
                 buyDate
         );
         this.portfolio.addTransaction(transaction);
-
-        // Save transaction to Firestore (subcollection)
-        Map<String, Object> txData = transaction.toMap();
-        db.collection("users")
-                .document(userId)
-                .collection("portfolio")
-                .document("main")
-                .collection("transactions")
-                .add(txData);
     }
 
     private void documentToPortfolio(Portfolio portfolio, DocumentSnapshot doc) {

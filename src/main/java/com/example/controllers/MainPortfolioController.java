@@ -212,7 +212,7 @@ public class MainPortfolioController {
         });
     }
 
-    private void loadRealPortfolioData() {
+    public void loadRealPortfolioData() {
         Task<Void> loadTask = new Task<>() {
             @Override
             protected Void call() {

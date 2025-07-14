@@ -118,6 +118,7 @@ public class StockScreenController {
 
         MainPortfolioController controller = fxmlLoader.getController();
         controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);
+        controller.loadRealPortfolioData();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(MainPortfolioRoot));
