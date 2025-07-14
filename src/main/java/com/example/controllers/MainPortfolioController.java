@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -366,15 +367,29 @@ public class MainPortfolioController {
                 "TSLA", "Tesla Inc", 8, 700.0, 750.0, 400.0, 6000.0));
     }
 
+    @FXML private VBox chatHistoryBox;
+    @FXML private TextField userInput;
+    @FXML private Button sendBtn;
+
+
     @FXML
     protected void onSend() {
         String userMsg = userInput.getText();
         if (!userMsg.isBlank()) {
-            chatArea.appendText("You: " + userMsg + "\n");
+            Label userLabel = new Label("You: " + userMsg);
+            userLabel.setStyle("-fx-background-color: #393939; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+            userLabel.setWrapText(true);
+            userLabel.setMaxWidth(200);
+            chatHistoryBox.getChildren().add(userLabel);
             userInput.clear();
 
             // Loading message
             chatArea.appendText("AI: ...thinking...\n");
+            Label thinkingLabel = new Label("AI: ...thinking...");
+            thinkingLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+            thinkingLabel.setWrapText(true);
+            thinkingLabel.setMaxWidth(200);
+            chatHistoryBox.getChildren().add(thinkingLabel);
 
             new Thread(() -> {
                 try {
