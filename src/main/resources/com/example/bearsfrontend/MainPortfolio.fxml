@@ -9,12 +9,14 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.MainPortfolioController">
@@ -26,49 +28,144 @@
                <children>
                   <HBox prefHeight="42.0" prefWidth="168.0">
                      <children>
-                        <Label text="Balance: " textFill="WHITE" />
-                        <Label fx:id="balanceLabel" textFill="WHITE" />
+                        <Label text="Balance: " textFill="#39ff43">
+                           <padding>
+                              <Insets top="12.0" />
+                           </padding>
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="balanceLabel" textFill="WHITE">
+                           <padding>
+                              <Insets top="12.0" />
+                           </padding>
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
+            
+                                                <Button fx:id="addFundsButton" mnemonicParsing="false" onAction="#handleAddFunds" prefHeight="25.0" prefWidth="84.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Add Funds" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="3.0" right="8.0" />
+                     </HBox.margin>
+                     <effect>
+                        <DropShadow spread="0.15">
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/!bearsLogo.png" />
                      </image>
                   </ImageView>
             
-                  <Button fx:id="addFundsButton" mnemonicParsing="false" onAction="#handleAddFunds" prefHeight="25.0" prefWidth="84.0" text="Add Funds" />
+                  <TextField fx:id="StockSearchField" alignment="CENTER" onAction="#handleEnter" onMouseClicked="#clearStockSearch" prefHeight="25.0" prefWidth="84.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50; -fx-text-fill: #ffffff;" text="Stock Search">
+                     <HBox.margin>
+                        <Insets left="8.0" right="8.0" />
+                     </HBox.margin>
+                     <effect>
+                        <DropShadow spread="0.15">
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect></TextField>
             
-                  <TextField fx:id="StockSearchField" alignment="CENTER" onAction="#handleEnter" onMouseClicked="#clearStockSearch" prefHeight="25.0" prefWidth="84.0" text="Stock Search" />
+                  <Button mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="25.0" prefWidth="84.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Exit" textFill="WHITE" wrapText="true">
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                     <effect>
+                        <DropShadow spread="0.15">
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect></Button>
             
-                  <Button mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="25.0" prefWidth="84.0" text="Exit" />
-            
-                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="25.0" prefWidth="84.0" text="Sign out" />
+                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="25.0" prefWidth="84.0" style="-fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-color: #45CC2D; -fx-background-radius: 50;" text="Sign out" textFill="WHITE">
+                     <effect>
+                        <DropShadow spread="0.15">
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect></Button>
                </children>
             </HBox>
          </top>
          <left>
-            <VBox prefHeight="336.0" prefWidth="186.0" spacing="8.0" BorderPane.alignment="CENTER_LEFT">
+            <VBox prefHeight="299.0" prefWidth="186.0" spacing="8.0" BorderPane.alignment="CENTER_LEFT">
                <children>
-            
-                  <TextArea fx:id="marketNewsArea" text="Market news" VBox.vgrow="ALWAYS" />
+                  <VBox prefHeight="283.0" prefWidth="186.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;">
+                     <children>
+                        <Label text="Market News" textFill="#4f8cff">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="marketNewsArea" editable="false" prefHeight="231.0" prefWidth="168.0" wrapText="true" VBox.vgrow="ALWAYS" />
+                     </children>
+                     <effect>
+                        <DropShadow spread="0.15">
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </VBox>
                </children>
+               <BorderPane.margin>
+                  <Insets bottom="15.0" />
+               </BorderPane.margin>
             </VBox>
          </left>
          <center>
             <VBox BorderPane.alignment="CENTER">
                <children>
-            
-                  <TextArea prefHeight="348.0" prefWidth="399.0" text="Snapshot - overall account value&#10;Daily / all time pnl&#10;Notabe assets held" VBox.vgrow="ALWAYS" />
+                  <VBox style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;">
+                     <children>
+                        <Label text="Snapshot" textFill="#4f8cff">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextArea prefHeight="350.0" prefWidth="399.0" text="Snapshot - overall account value&#10;Daily / all time pnl&#10;Notabe assets held" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </VBox>
                </children>
                <padding>
-                  <Insets bottom="10.0" />
+                  <Insets bottom="15.0" />
                </padding>
             </VBox>
          </center>
          <right>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
                <children>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="204.0" prefWidth="215.0" spacing="6.0" style="-fx-background-color: #23272f; -fx-border-color: #4f8cff; -fx-border-radius: 10; -fx-padding: 8;" VBox.vgrow="ALWAYS">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="336.0" prefWidth="259.0" spacing="6.0" style="-fx-background-color: #23272f; -fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
                      <children>
                         <Label style="-fx-text-fill: #4f8cff;" text="Ask ChatGPT">
                            <font>
@@ -82,11 +179,28 @@
                         </ScrollPane>
                         <HBox prefHeight="0.0" prefWidth="197.0" spacing="5.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="userInput" prefWidth="142.0" promptText="Have a question?" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#onSend" text="Send" />
+                              <TextField fx:id="userInput" onAction="#onSend" prefWidth="142.0" promptText="Have a question?" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#onSend" style="-fx-background-color: #4f8cff; -fx-border-radius: 50; -fx-background-radius: 50;" text="Send" textFill="WHITE">
+                                 <effect>
+                                    <DropShadow spread="0.4">
+                                       <color>
+                                          <Color red="0.013888888992369175" green="0.11249999701976776" blue="1.0" />
+                                       </color>
+                                    </DropShadow>
+                                 </effect></Button>
                            </children>
                         </HBox>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="5.0" right="5.0" />
+                     </VBox.margin>
+                     <effect>
+                        <DropShadow>
+                           <color>
+                              <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                           </color>
+                        </DropShadow>
+                     </effect>
                   </VBox>
                </children>
             </VBox>
@@ -97,16 +211,26 @@
          </stylesheets>
          <bottom>
       
-                  <TableView fx:id="portfolioTable" prefHeight="164.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+                                    <TableView fx:id="portfolioTable" prefHeight="203.0" prefWidth="800.0" style="-fx-background-color: #23272f; -fx-background-radius: 1;" BorderPane.alignment="CENTER">
                <columns>
                   <TableColumn fx:id="tickerColumn" prefWidth="75.0" text="Ticker" />
                   <TableColumn fx:id="companyColumn" prefWidth="100.0" text="Company" />
                   <TableColumn fx:id="sharesColumn" prefWidth="75.0" text="Shares" />
                   <TableColumn fx:id="avgBuyColumn" prefWidth="75.0" text="Avg Buy" />
                   <TableColumn fx:id="currentPriceColumn" prefWidth="90.0" text="Current Price" />
-                  <TableColumn fx:id="unrealizedGainColumn" prefWidth="90.0" text="Unrealized Gain" />
-                  <TableColumn fx:id="totalValueColumn" prefWidth="90.0" text="Total Value" />
+                  <TableColumn fx:id="unrealizedGainColumn" prefWidth="99.0" text="Unrealized Gain" />
+                  <TableColumn fx:id="totalValueColumn" prefWidth="81.0" text="Total Value" />
                </columns>
+               <effect>
+                  <DropShadow spread="0.44">
+                     <color>
+                        <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+                     </color>
+                  </DropShadow>
+               </effect>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" />
+               </BorderPane.margin>
             </TableView>
          </bottom>
       </BorderPane>

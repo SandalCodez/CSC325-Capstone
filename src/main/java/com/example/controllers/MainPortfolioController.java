@@ -401,7 +401,7 @@ public class MainPortfolioController {
                         Label aiLabel = new Label("AI: " + aiReply.trim());
                         aiLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
                         aiLabel.setWrapText(true);
-                        aiLabel.setMaxWidth(300);
+                        aiLabel.setMaxWidth(200);
                         chatHistoryBox.getChildren().add(aiLabel);
                     });
                 } catch (Exception ex) {
