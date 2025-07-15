@@ -15,8 +15,8 @@ public class Driver extends Application {
 
         Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
 
-        FirestoreDB db = new FirestoreDB();
-        db.connect();
+      //  FirestoreDB db = new FirestoreDB();
+      //  db.connect();
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
