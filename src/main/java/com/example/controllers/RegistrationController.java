@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
@@ -33,9 +32,8 @@ public class RegistrationController {
     private Label registerError;
     @FXML
     private TextField emailField;
-@FXML
+    @FXML
     private TextField confirmEmailField;
-
 
     @FXML
     private TextField fNameField;
@@ -64,12 +62,10 @@ public class RegistrationController {
         String lName = lNameField.getText();
         String password = passwordField.getText();
 
-
         Firestore firestoreDB = FirestoreClient.getFirestore();
       UserAuth userAuth = new UserAuth(firestoreDB);
 
       LocalDate today = LocalDate.now();
-
 
       if((email.isEmpty()||fName.isEmpty()||lName.isEmpty()||password.isEmpty())) {
           registerError.setText("Please fill all the fields");
@@ -80,8 +76,6 @@ public class RegistrationController {
               return;
       }
           userAuth.registerUser(emailField.getText(), passwordField.getText(), fNameField.getText(), lNameField.getText(), today);
-
-
 
         emailField.getText();
         fNameField.getText();

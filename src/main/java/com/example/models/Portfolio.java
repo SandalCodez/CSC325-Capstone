@@ -48,11 +48,35 @@ public class Portfolio {
         holdings.add(entry);
     }
 
+    public PortfolioEntry getEntryBySymbol(String symbol) {
+        if (symbol == null) return null;
+        for (PortfolioEntry entry : holdings) {
+            if (entry.getTickerSymbol().equalsIgnoreCase(symbol)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
     public void addTransaction(PortfolioEntry transaction) {
         if (transactions == null) {
             transactions = new ArrayList<>();
         }
         transactions.add(transaction);
+    }
+
+    public double getTotalValue(){
+        if(holdings == null || holdings.isEmpty()){
+            return 0.0;
+        }
+        double total = 0.0;
+        for (PortfolioEntry entry : holdings) {
+            Double currentPrice = entry.getCurrentPrice();
+            if(currentPrice == null){
+                total += currentPrice * entry.getTotalValue();
+            }
+        }
+        return total;
     }
 
 

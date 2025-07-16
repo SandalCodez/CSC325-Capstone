@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.application.Platform;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -221,7 +222,7 @@ public class FinnhubService {
                             JSONArray data = json.optJSONArray("data");
                             if (data != null && data.length() > 0) {
                                 double price = data.getJSONObject(0).optDouble("p", 0.0);
-                                onPriceUpdate.accept(price);
+                                Platform.runLater(() -> onPriceUpdate.accept(price));
                             }
                         } catch (JSONException e) {
                             System.err.println("WebSocket JSON parse error: " + e.getMessage());

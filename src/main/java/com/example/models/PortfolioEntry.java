@@ -12,36 +12,41 @@ import java.util.Map;
 public class PortfolioEntry {
 
     private String tickerSymbol;
+
     private String companyName;
+    private double balance;
     private double buyPrice;
     private int totalShares;
     private Date buyDate;
     private double currentPrice;
+
     private final SimpleDoubleProperty totalValue = new SimpleDoubleProperty();
     private final SimpleDoubleProperty unrealizedGainLoss = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty profitLossPercentage = new SimpleDoubleProperty();
+    private final SimpleDoubleProperty portfolioWeight = new SimpleDoubleProperty();
 
     public PortfolioEntry() {}
 
-    public PortfolioEntry(String tickerSymbol, int totalShares, double buyPrice, Date buyDate) {
+    public PortfolioEntry(String tickerSymbol, String companyName, int totalShares, double buyPrice, Date buyDate) {
         this.tickerSymbol = tickerSymbol;
-        this.buyPrice = buyPrice;
+        this.companyName = companyName;
         this.totalShares = totalShares;
+        this.buyPrice = buyPrice;
         this.buyDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static PortfolioEntry fromStock(Stock stock, int totalShares, double buyPrice) {
-        PortfolioEntry entry = new PortfolioEntry(
-                stock.getTickerSymbol(),
-                totalShares,
-                buyPrice,
-                Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
-        );
-        double currentPrice = stock.getCurrentPrice();
+    public static PortfolioEntry fromStock(String ticker,String companyName, int shares, double buyPrice, Date buyDate, double currentPrice) {
+        PortfolioEntry entry = new PortfolioEntry();
 
-        entry.setCurrentPrice(stock.getCurrentPrice());
-        entry.setTotalValue(currentPrice * totalShares);
-        entry.setUnrealizedGainLoss((currentPrice - buyPrice) * totalShares);
+        entry.setTickerSymbol(ticker);
+        entry.setCompanyName(companyName);
+        entry.setTotalShares(shares);
+        entry.setBuyPrice(buyPrice);
+        entry.setBuyDate(buyDate);
+        entry.setCurrentPrice(currentPrice);
 
+
+        // You can set portfolioWeight later after computing total portfolio value
         return entry;
     }
 
@@ -49,8 +54,14 @@ public class PortfolioEntry {
         PortfolioEntry entry = new PortfolioEntry();
 
         entry.setTickerSymbol((String) map.get("tickerSymbol"));
-        entry.setTotalShares(((Long) map.get("totalShares")).intValue());  // Firestore returns Long
+        entry.setCompanyName((String) map.get("companyName"));
         entry.setBuyPrice((Double) map.get("buyPrice"));
+        entry.setTotalShares(((Long) map.get("totalShares")).intValue());
+
+        Object balanceObj = map.get("balance");
+        if (balanceObj instanceof Double) {
+            entry.setBalance((Double) balanceObj);
+        }
 
         Object dateObj = map.get("buyDate");
         if (dateObj instanceof com.google.cloud.Timestamp) {
@@ -58,7 +69,32 @@ public class PortfolioEntry {
         } else if (dateObj instanceof Date) {
             entry.setBuyDate((Date) dateObj);
         } else {
-            entry.setBuyDate(null); // or handle default
+            entry.setBuyDate(null); // fallback
+        }
+
+        Object current = map.get("currentPrice");
+        if (current instanceof Double) {
+            entry.setCurrentPrice((Double) current);
+        }
+
+        Object tv = map.get("totalValue");
+        if (tv instanceof Double) {
+            entry.setTotalValue((Double) tv);
+        }
+
+        Object ug = map.get("unrealizedGainLoss");
+        if (ug instanceof Double) {
+            entry.setUnrealizedGainLoss((Double) ug);
+        }
+
+        Object pl = map.get("profitLossPercentage");
+        if (pl instanceof Double) {
+            entry.setProfitLossPercentage((Double) pl);
+        }
+
+        Object weight = map.get("portfolioWeight");
+        if (weight instanceof Double) {
+            entry.setPortfolioWeight((Double) weight);
         }
 
         return entry;
@@ -67,14 +103,23 @@ public class PortfolioEntry {
     public Map<String, Object> toMap(){
         Map<String, Object> map = new HashMap<>();
         map.put("tickerSymbol", tickerSymbol);
+        map.put("companyName", companyName);
         map.put("totalShares", totalShares);
         map.put("buyPrice", buyPrice);
         map.put("buyDate", buyDate);
         return map;
     }
 
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
     public double getTotalValue(){
-        return totalValue.get();
+        return currentPrice * totalShares;
     }
 
     public void setTotalValue(double value){
@@ -82,7 +127,7 @@ public class PortfolioEntry {
     }
 
    public double getUnrealizedGainLoss(){
-        return unrealizedGainLoss.get();
+        return (currentPrice - buyPrice) * totalShares;
    }
 
     public void setUnrealizedGainLoss(double value){
@@ -96,7 +141,6 @@ public class PortfolioEntry {
     public void setCompanyName(String companyName){
         this.companyName = companyName;
     }
-
 
     public String getTickerSymbol() {
         return tickerSymbol;
@@ -136,5 +180,17 @@ public class PortfolioEntry {
         return currentPrice;
     }
 
+    public double getProfitLossPercentage() {
+        return (buyPrice == 0) ? 0 : ((currentPrice - buyPrice) / buyPrice) * 100;
+    }
+    public void setProfitLossPercentage(double profitLossPercentage) {
+        this.profitLossPercentage.set(profitLossPercentage);
+    }
+    public double getPortfolioWeight() {
+        return portfolioWeight.get();
+    }
+    public void setPortfolioWeight(double portfolioWeight) {
+        this.portfolioWeight.set(portfolioWeight);
+    }
 
 }

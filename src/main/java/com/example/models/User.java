@@ -10,6 +10,9 @@ public class User {
     private String email;
     private Date createdAt;
     private double balance;
+    private boolean loggedIn;
+    private User loggedInUser;
+    String uid;
 
     public User(String fName, String lName, String hashedPass, String email, LocalDate createdAt, double balance) {
         this.fName = fName;
@@ -57,5 +60,37 @@ public class User {
     }
     public void setAccountBalance(double accountBalance) {
         this.balance = accountBalance;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedInUser != null;
+    }
+    public void logout() {
+        loggedIn = false;
+    }
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUserFullName() {
+        return fName + " " + lName;
+    }
+
+    public String getUserUid() {
+        return uid;
+    }
+
+    public void setUserUid(String currentUserUid) {
+        this.uid = currentUserUid;
     }
 }

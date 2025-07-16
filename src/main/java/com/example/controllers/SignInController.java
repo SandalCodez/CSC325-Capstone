@@ -38,20 +38,31 @@ public class SignInController {
     private FirebaseAuthService firebaseAuthService;
     private PortfolioIntegration portfolioIntegration;
     private Portfolio portfolio;
-
+    private FinnhubService finnhubService;
+    private User loggedInUser;
+    private String uid;
 
     public SignInController() {}
 
-    public SignInController(FirestoreDB db) {
-        this.db = db;
-    }
-
-    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration, User loggedInUser, String uid) {
         this.db = db;
         this.userAuth = userAuth;
         this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
+        this.portfolioIntegration = portfolioIntegration;
+        this.loggedInUser = loggedInUser;
+        this.uid = uid;
+    }
+
+    public void setSplashDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
         this.portfolioIntegration = portfolioIntegration;
     }
+
+
 
     public void setFirestoreDB(FirestoreDB db) {
         this.db = db;
@@ -85,28 +96,30 @@ public class SignInController {
             // turn this into a label
             signInErrorLabel.setText("Username and Password are empty");
             return;
-
         }
             try {
-                User user = userAuth.loginUser(email, password);
+                this.loggedInUser = userAuth.loginUser(email, password);
+                System.out.println("loggedInUser UID before set: " + this.loggedInUser.getUid() );
+
+                this.userAuth.setUser(this.loggedInUser);
+                this.loggedInUser.setUserUid(userAuth.getCurrentUserUid());
+
+                System.out.println("loggedInUser UID AFTER set: " + this.loggedInUser.getUid() );
+
 
                 // Get the UID from userAuth
-                String uid = userAuth.getCurrentUserUid();
+                this.uid = userAuth.getCurrentUserUid();
 
-                // Store in session with both User object and UID
-                UserSession.getInstance().setCurrentUser(user, uid, userAuth);
-
-                System.out.println(("Login successful! Welcome " + user.getfName()+ ", success"));
+                System.out.println(("Login successful! Welcome " + loggedInUser.getfName()+ ", success"));
+                System.out.println("Balance after login: " + portfolio.getBalance());
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
                 Parent MainPortfolioRoot = fxmlLoader.load();
 
                 MainPortfolioController controller = fxmlLoader.getController();
 
-                controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);
+                controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration, loggedInUser, uid);
 
                 db.setPortfolioIntegration(portfolioIntegration);
-
-                controller.setLoggedInUser(user);
 
                 controller.initializeData();
 
@@ -147,6 +160,12 @@ public class SignInController {
     @FXML
     private void clearPassword(MouseEvent event) {
         passwordField.clear();
+    }
+    public SignInController(FirestoreDB db) {
+        this.db = db;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
 }

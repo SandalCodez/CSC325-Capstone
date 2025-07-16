@@ -1,8 +1,6 @@
 package com.example.controllers;
 
-import com.example.models.CompanyProfile;
-import com.example.models.Portfolio;
-import com.example.models.Stock;
+import com.example.models.*;
 import com.example.services.FinnhubService;
 import com.example.services.FirestoreDB;
 import com.example.services.PortfolioIntegration;
@@ -26,19 +24,28 @@ import java.util.Optional;
 
 public class StockScreenController {
 
-    private final FinnhubService finnhubService = new FinnhubService();
+    private FinnhubService finnhubService = new FinnhubService();
     private String initialTicker = null;
     private PortfolioIntegration portfolioIntegration;
     private FirestoreDB db;
     private Portfolio portfolio;
     private UserAuth userAuth;
+    private PortfolioEntry selectedEntry = null;
+    private User loggedInUser;
+    private String uid;
 
-    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration, User loggedInUser, String uid) {
         this.db = db;
         this.userAuth = userAuth;
         this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
         this.portfolioIntegration = portfolioIntegration;
+        this.loggedInUser = loggedInUser;
+        this.uid = uid;
+        updateBalanceDisplay();
     }
+
 
     @FXML
     private TextField tickerInputField;
@@ -46,7 +53,7 @@ public class StockScreenController {
     @FXML
     private Label tickerLabel, companyNameLabel, industryLabel, currentPriceLabel, marketCapLabel,
             sharesOutstandingLabel, numberOfSharesLabel, averageBuyPriceLabel,
-            totalValueLabel, gainLossLabel, profitLossLabel, percentOfPortfolioLabel;
+            totalValueLabel, gainLossLabel, profitLossLabel, percentOfPortfolioLabel, balanceLabel;
 
     @FXML
     private TextArea companyNewsTextArea;
@@ -61,10 +68,8 @@ public class StockScreenController {
 
     @FXML
     private void initialize() {
-        if (initialTicker != null) {
-            loadStockData(initialTicker);
-        }
     }
+
 
     @FXML
     private void handleSearch() {
@@ -75,6 +80,16 @@ public class StockScreenController {
     }
 
     private void loadStockData(String symbol) {
+        // Reset holdings area first
+        populateHoldingsFields(null);
+
+        numberOfSharesLabel.setText("--");
+        averageBuyPriceLabel.setText("--");
+        totalValueLabel.setText("--");
+        gainLossLabel.setText("--");
+        profitLossLabel.setText("--");
+        percentOfPortfolioLabel.setText("--");
+
         try {
             Stock stock = finnhubService.getQuoteForTicker(symbol);
             CompanyProfile profile = finnhubService.getCompanyProfile(symbol);
@@ -84,23 +99,22 @@ public class StockScreenController {
             companyNameLabel.setText(profile.getName());
             industryLabel.setText(profile.getIndustry());
 
-            finnhubService.getCurrentPriceWithFallback(symbol, price -> {
-                Platform.runLater(() -> currentPriceLabel.setText(String.format("%.2f", price)));
-            });
-
             marketCapLabel.setText(String.format("%.2f", profile.getMarketCap()));
             sharesOutstandingLabel.setText(String.valueOf(profile.getSharesOutstanding()));
 
-            numberOfSharesLabel.setText("—");
-            averageBuyPriceLabel.setText("—");
-            totalValueLabel.setText("—");
-            gainLossLabel.setText("—");
-            profitLossLabel.setText("—");
-            percentOfPortfolioLabel.setText("—");
+            finnhubService.getCurrentPriceWithFallback(symbol, price -> {
+                currentPriceLabel.setText(String.format("%.2f", price));
+
+                PortfolioEntry entry = portfolio.getEntryBySymbol(symbol);
+                if (entry != null) {
+                    entry.setCurrentPrice(price);
+                    Platform.runLater(() -> populateHoldingsFields(entry));
+                }
+            });
 
             StringBuilder newsText = new StringBuilder();
             for (String headline : news) {
-                newsText.append("- ").append(headline).append("\n");
+                newsText.append("• ").append(headline).append("\n");
             }
             companyNewsTextArea.setText(newsText.toString());
 
@@ -117,8 +131,12 @@ public class StockScreenController {
         Parent MainPortfolioRoot = fxmlLoader.load();
 
         MainPortfolioController controller = fxmlLoader.getController();
-        controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);
+        System.out.println("Logged in user: " + this.loggedInUser);
+        controller.setLoggedInUser(this.loggedInUser);
+        controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration, loggedInUser, uid);
         controller.loadRealPortfolioData();
+        controller.loadBalanceLabel();
+        controller.loadMarketNews();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(MainPortfolioRoot));
@@ -129,7 +147,9 @@ public class StockScreenController {
     @FXML
     private void handleBuyButtonClick() {
         try {
+            System.out.println("DEBUG handle buystock balance: " + loggedInUser.getAccountBalance());
             String ticker = tickerLabel.getText().trim().toUpperCase();
+            String companyName = companyNameLabel.getText().trim();
 
             TextInputDialog dialog = new TextInputDialog("1");
             dialog.setTitle("Buy Shares");
@@ -146,13 +166,13 @@ public class StockScreenController {
                     double price = Double.parseDouble(currentPriceLabel.getText()); // or live API
                     Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-                    portfolioIntegration.buyStock(ticker, quantity, price, date);
+                    portfolioIntegration.buyStock(ticker, companyName, quantity, price, date);
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setContentText("Successfully bought " + quantity + " shares of " + ticker + "!");
                     alert.showAndWait();
 
-                    refreshStockScreen(); // optionally refresh UI
+                    refreshStockScreen(); // optionally refresh U
                 } catch (NumberFormatException e) {
                     showError("Invalid quantity. Please enter a positive integer.");
                 }
@@ -160,10 +180,70 @@ public class StockScreenController {
 
         } catch (Exception e) {
             Alert error = new Alert(Alert.AlertType.ERROR, "Failed to buy stock: " + e.getMessage());
-            e.printStackTrace();
             error.showAndWait();
         }
     }
+
+    @FXML
+    private void handleSellButtonClick(ActionEvent event) {
+        String ticker = tickerLabel.getText();
+        PortfolioEntry entry = portfolio.getEntryBySymbol(ticker);
+
+        if (entry == null) {
+            showAlert("You don't own any shares of this stock.");
+            return;
+        }
+
+        TextInputDialog inputDialog = new TextInputDialog();
+        inputDialog.setTitle("Sell Shares");
+        inputDialog.setHeaderText("Enter number of shares to sell:");
+        inputDialog.setContentText("Shares:");
+
+        Optional<String> result = inputDialog.showAndWait();
+        if (result.isEmpty()) {
+            return;
+        }
+
+        int quantityToSell;
+        try {
+            quantityToSell = Integer.parseInt(result.get());
+        } catch (NumberFormatException e) {
+            showAlert("Invalid number entered.");
+            return;
+        }
+
+        if (quantityToSell <= 0 || quantityToSell > entry.getTotalShares()) {
+            showAlert("Enter a quantity between 1 and " + entry.getTotalShares());
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Sell");
+        confirm.setHeaderText("Are you sure you want to sell " + quantityToSell + " share(s) of " + ticker + "?");
+        confirm.setContentText("This action will update your portfolio and balance.");
+
+        Optional<ButtonType> confirmation = confirm.showAndWait();
+        if (confirmation.isEmpty() || confirmation.get() != ButtonType.OK) {
+            return;
+        }
+
+        double currentPrice;
+        try {
+            currentPrice = Double.parseDouble(currentPriceLabel.getText().replace("$", ""));
+        } catch (Exception e) {
+            showAlert("Current price is unavailable.");
+            return;
+        }
+        Date sellDate = new Date();
+
+        try{
+            portfolioIntegration.sellStock(ticker, quantityToSell, currentPrice, sellDate);
+            showAlert("Sell Successful");
+        } catch (Exception e) {
+            showAlert("Sell Failed: " + e.getMessage());
+        }
+    }
+
 
     private void showError(String message) {
         Alert error = new Alert(Alert.AlertType.ERROR);
@@ -175,6 +255,101 @@ public class StockScreenController {
     private void refreshStockScreen() {
         String ticker = tickerLabel.getText().trim().toUpperCase();
         loadStockData(ticker);
+    }
+
+    public void setContext(
+            PortfolioEntry entry,
+            FirestoreDB db,
+            UserAuth userAuth,
+            Portfolio portfolio,
+            FinnhubService finnhubService,
+            PortfolioIntegration portfolioIntegration,
+            User loggedInUser,
+            String uid
+    ) {
+        this.selectedEntry = entry;
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
+        this.portfolioIntegration = portfolioIntegration;
+        this.loggedInUser = loggedInUser;
+        this.uid = uid;
+
+        if (entry != null) {
+            populateFromEntry(entry);
+        }
+
+        updateBalanceDisplay();
+    }
+
+    private void populateFromEntry(PortfolioEntry entry) {
+        if (entry != null) {
+            selectedEntry = entry;
+            String ticker = entry.getTickerSymbol();
+            tickerInputField.setText(ticker);
+            loadStockData(ticker); // sets company labels
+            populateHoldingsFields(entry); // sets shares/buy price/gain-loss
+        }
+    }
+
+    private void populateHoldingsFields(PortfolioEntry entry) {
+        if (entry == null) return;
+
+        int shares = entry.getTotalShares();
+        double buyPrice = entry.getBuyPrice();
+        Double currentPrice = entry.getCurrentPrice();
+
+        // Defensive: if missing price data, skip calculation
+        if (currentPrice == null || buyPrice <= 0 || shares <= 0) {
+            numberOfSharesLabel.setText("--");
+            averageBuyPriceLabel.setText("--");
+            totalValueLabel.setText("--");
+            gainLossLabel.setText("--");
+            profitLossLabel.setText("--");
+            percentOfPortfolioLabel.setText("--");
+            return;
+        }
+
+        // Core calculations
+        double totalValue = currentPrice * shares;
+        double costBasis = buyPrice * shares;
+        double gainLoss = totalValue - costBasis;
+        double profitLossPercent = (gainLoss / costBasis) * 100;
+
+        // Portfolio weight (% of portfolio)
+        double portfolioTotal = portfolio != null ? portfolio.getTotalValue() : 0.0;
+        double percentOfPortfolio = portfolioTotal > 0 ? (totalValue / portfolioTotal) * 100 : 0.0;
+
+
+        // Set labels
+        numberOfSharesLabel.setText(String.valueOf(shares));
+        averageBuyPriceLabel.setText(String.format("$%.2f", buyPrice));
+        totalValueLabel.setText(String.format("$%.2f", totalValue));
+        gainLossLabel.setText(String.format("$%.2f", gainLoss));
+        profitLossLabel.setText(String.format("%.2f%%", profitLossPercent));
+        percentOfPortfolioLabel.setText(String.format("%.2f%%", percentOfPortfolio));
+    }
+
+    public void updateBalanceDisplay(){
+        if(loggedInUser != null && balanceLabel != null){
+            balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+        }
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Sell Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
 

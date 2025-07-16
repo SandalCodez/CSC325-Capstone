@@ -1,6 +1,7 @@
 package com.example.controllers;
 
 import com.example.models.Portfolio;
+import com.example.services.FinnhubService;
 import com.example.services.FirestoreDB;
 import com.example.services.PortfolioIntegration;
 import com.example.services.UserAuth;
@@ -19,14 +20,16 @@ public class SplashController {
     private Portfolio portfolio;
     private UserAuth userAuth;
     private PortfolioIntegration portfolioIntegration;
+    private FinnhubService finnhubService;
 
     @FXML
     private AnchorPane splashRoot;
 
-    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, PortfolioIntegration portfolioIntegration) {
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration) {
         this.db = db;
         this.userAuth = userAuth;
         this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
         this.portfolioIntegration = portfolioIntegration;
     }
 
@@ -47,7 +50,7 @@ public class SplashController {
                 Parent signInRoot = loader.load();
 
                 SignInController controller = loader.getController();
-                controller.setDependencies(db, userAuth, portfolio, portfolioIntegration);  // <-- Pass db correctly after load()
+                controller.setSplashDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration);
 
                 Stage stage = (Stage) splashRoot.getScene().getWindow();
                 stage.setScene(new Scene(signInRoot));

@@ -15,6 +15,7 @@ public class FirestoreDB {
     private Firestore firestore;
     private  Portfolio portfolio;
     public PortfolioIntegration portfolioIntegration;
+    private FinnhubService finnhubService;
 
 
     public Firestore getFirestore() {
@@ -47,7 +48,7 @@ public class FirestoreDB {
             }
 
             if (this.portfolioIntegration == null) {
-                this.portfolioIntegration = new PortfolioIntegration(firestore, portfolio);
+                this.portfolioIntegration = new PortfolioIntegration(firestore, finnhubService, portfolio);
             }
             ex.printStackTrace();
         }

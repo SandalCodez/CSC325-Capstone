@@ -16,7 +16,7 @@
       </ImageView>
 
       <Button fx:id="buyButton" layoutX="376.0" layoutY="56.0" onAction="#handleBuyButtonClick" prefHeight="25.0" prefWidth="87.0" text="Buy" />
-      <Button fx:id="sellButton" layoutX="475.0" layoutY="56.0" prefHeight="25.0" prefWidth="95.0" text="Sell" />
+      <Button fx:id="sellButton" layoutX="475.0" layoutY="56.0" onAction="#handleSellButtonClick" prefHeight="25.0" prefWidth="95.0" text="Sell" />
       <Button fx:id="backToPortfolioButton" layoutX="376.0" layoutY="14.0" onAction="#handleBackToMainPortfolio" prefHeight="33.0" prefWidth="194.0" text="Back to Portfolio Overview" />
 
       <TextField layoutX="256.0" layoutY="30.0" prefHeight="49.0" prefWidth="101.0" text="!Bears">
@@ -52,8 +52,8 @@
             </HBox>
             <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
                <children>
-                  <Label fx:id="marketCapLabel" text="Market Cap: " textFill="WHITE" />
-                  <Label textFill="WHITE" />
+                  <Label text="Market Cap: " textFill="WHITE" />
+                  <Label fx:id="marketCapLabel" textFill="WHITE" />
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="67.0" prefHeight="19.0" prefWidth="223.0">
@@ -110,8 +110,14 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="searchButton" layoutX="120.0" layoutY="35.0" onAction="#handleSearch" prefHeight="25.0" prefWidth="101.0" text="Search" />
-      <TextField fx:id="tickerInputField" layoutX="23.0" layoutY="35.0" prefHeight="25.0" prefWidth="87.0" promptText="Ticker" />
+      <Button fx:id="searchButton" layoutX="125.0" layoutY="44.0" onAction="#handleSearch" prefHeight="25.0" prefWidth="101.0" text="Search" />
+      <TextField fx:id="tickerInputField" layoutX="23.0" layoutY="43.0" prefHeight="25.0" prefWidth="87.0" promptText="Ticker" />
       <TextArea fx:id="companyNewsTextArea" layoutX="253.0" layoutY="100.0" prefHeight="130.0" prefWidth="321.0" promptText="Company News" />
+      <HBox layoutX="25.0" layoutY="21.0" prefHeight="19.0" prefWidth="147.0">
+         <children>
+            <Label text="Balance: " textFill="WHITE" />
+            <Label fx:id="balanceLabel" prefHeight="17.0" prefWidth="97.0" textFill="WHITE" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
