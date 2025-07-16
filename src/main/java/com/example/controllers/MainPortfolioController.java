@@ -232,8 +232,6 @@ public class MainPortfolioController {
                     Platform.runLater(() -> {
                         portfolioData.clear();
                         portfolioData.addAll(portfolio.getHoldings());
-
-
                     });
 
                 } catch (Exception e) {

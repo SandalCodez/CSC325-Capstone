@@ -6,8 +6,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.Firestore;
-
-import javax.sound.sampled.Port;
 import java.io.IOException;
 
 public class FirestoreDB {

@@ -26,15 +26,13 @@ public class Driver extends Application {
         UserAuth userAuth = new UserAuth(db.getFirestore());
         Portfolio portfolio = new Portfolio();
         FinnhubService finnhubService = new FinnhubService();
-        db.setPortfolioIntegration(null);
         System.out.println("Balance before launching screen: " + portfolio.getBalance());
-
 
         FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/splash.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
 
         SplashController controller = fxmlLoader.getController();
-        controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration);
+        controller.setDependencies(db, userAuth, portfolio, finnhubService);
 
         stage.setTitle("Sign In");
         stage.setScene(scene);

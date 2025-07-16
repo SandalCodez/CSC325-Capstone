@@ -46,7 +46,6 @@ public class StockScreenController {
         updateBalanceDisplay();
     }
 
-
     @FXML
     private TextField tickerInputField;
 
@@ -351,6 +350,4 @@ public class StockScreenController {
     public void setUid(String uid) {
         this.uid = uid;
     }
-
-
 }

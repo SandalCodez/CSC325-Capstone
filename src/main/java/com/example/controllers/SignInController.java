@@ -54,12 +54,12 @@ public class SignInController {
         this.uid = uid;
     }
 
-    public void setSplashDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration) {
+    public void setSplashDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService) {
         this.db = db;
         this.userAuth = userAuth;
         this.portfolio = portfolio;
         this.finnhubService = finnhubService;
-        this.portfolioIntegration = portfolioIntegration;
+
     }
 
 
@@ -106,6 +106,8 @@ public class SignInController {
 
                 System.out.println("loggedInUser UID AFTER set: " + this.loggedInUser.getUid() );
 
+
+                PortfolioIntegration portfolioIntegration = new PortfolioIntegration(db.getFirestore(), finnhubService,userAuth, loggedInUser, portfolio);
 
                 // Get the UID from userAuth
                 this.uid = userAuth.getCurrentUserUid();
