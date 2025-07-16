@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignOutController">
-   <children>
-      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="400.0" fitWidth="600.0">
-         <image>
-            <Image url="@images/BearsSignOutPage.png" />
-         </image>
-      </ImageView>
-   </children>
-</AnchorPane>
+<StackPane fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignOutController">
+
+   <ImageView fx:id="bgImageView" preserveRatio="false">
+      <image>
+         <Image url="@images/BearsSignOutPage.png" />
+      </image>
+   </ImageView>
+
+   <Group fx:id="scalingPane" scaleX="0.5" scaleY="0.5">
+      <AnchorPane prefWidth="600.0" prefHeight="400.0">
+      </AnchorPane>
+   </Group>
+</StackPane>
+
