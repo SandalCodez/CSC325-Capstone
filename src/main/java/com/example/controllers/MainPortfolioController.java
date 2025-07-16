@@ -11,18 +11,23 @@ import com.example.services.FirestoreDB;
 import com.example.services.UserSession;
 import com.google.cloud.firestore.Firestore;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -82,6 +87,13 @@ public class MainPortfolioController {
     private User loggedInUser;
     private UserAuth userAuth;
 
+    @FXML private StackPane rootPane;
+    @FXML private Group scalingPane;
+    @FXML private ImageView bgImageView;
+    double baseWidth = 1200.0;
+    double baseHeight = 800.0;
+
+
     public void initialize() {
         try {
             // Initialize Firebase and portfolio service
@@ -122,6 +134,24 @@ public class MainPortfolioController {
             loadTestData();
             portfolioTable.setItems(portfolioData);
             loadMarketNews();
+
+            rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseWidth;
+                    scalingPane.setScaleX(scale);
+                    bgImageView.setFitWidth(newVal.doubleValue());
+                }
+            });
+
+            rootPane.heightProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseHeight;
+                    scalingPane.setScaleY(scale);
+                    bgImageView.setFitHeight(newVal.doubleValue());
+                }
+            });
+
+
         }
     }
 

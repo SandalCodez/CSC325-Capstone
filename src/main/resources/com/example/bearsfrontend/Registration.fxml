@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.RegistrationController">
-   <children>
+<StackPane  fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.RegistrationController">
 
-      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="false">
-         <image>
-            <Image url="@images/defbackground.png" />
-         </image>
-      </ImageView>
-      <TextField fx:id="fNameField" layoutX="66.0" layoutY="118.0" promptText="First Name" />
-      <Label fx:id="fNameError" layoutX="66.0" layoutY="144.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
-      <TextField fx:id="lNameField" layoutX="387.0" layoutY="118.0" promptText="Last Name" />
+   <ImageView fx:id="bgImageView" preserveRatio="false">
+      <image>
+         <Image url="@images/defbackground.png" />
+      </image>
+   </ImageView>
 
-      <TextField fx:id="emailField" layoutX="66.0" layoutY="188.0" promptText="Email" />
-      <TextField fx:id="confirmEmailField" layoutX="387.0" layoutY="188.0" promptText="Confirm Email" />
-      <TextField fx:id="passwordField" layoutX="66.0" layoutY="258.0" promptText="Password" />
-      <TextField layoutX="387.0" layoutY="258.0" promptText="Confirm Password" />
-      <Button layoutX="333.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
-      <TextField alignment="CENTER" layoutX="226.0" layoutY="34.0" prefHeight="45.0" prefWidth="149.0" text="!Bears">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </TextField>
-      <Button fx:id="registerBtn" layoutX="200.0" layoutY="312.0" mnemonicParsing="false" onAction="#registerClick" text="Register" />
-      <Label fx:id="emailError" layoutX="65.0" layoutY="214.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
-      <Label fx:id="confirmEmailError" layoutX="386.0" layoutY="214.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
-      <Label fx:id="lNameError" layoutX="387.0" layoutY="144.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
-      <Label fx:id="confPassError" layoutX="387.0" layoutY="284.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
-      <Label fx:id="registerError" alignment="CENTER" layoutX="225.0" layoutY="345.0" prefHeight="18.0" prefWidth="150.0" textFill="RED" />
+   <Group fx:id="scalingPane" scaleX="0.5" scaleY="0.5">
+      <AnchorPane prefHeight="400.0" prefWidth="600.0">
 
-   </children>
-</AnchorPane>
+         <TextField fx:id="fNameField" layoutX="66.0" layoutY="118.0" promptText="First Name" />
+         <TextField fx:id="lNameField" layoutX="387.0" layoutY="118.0" promptText="Last Name" />
+         <TextField fx:id="emailField" layoutX="66.0" layoutY="188.0" promptText="Email" />
+         <TextField fx:id="confirmEmailField" layoutX="387.0" layoutY="188.0" promptText="Confirm Email" />
+         <PasswordField fx:id="passwordField" layoutX="66.0" layoutY="258.0" promptText="Password" />
+         <PasswordField fx:id="confirmPasswordField" layoutX="387.0" layoutY="258.0" promptText="Confirm Password" />
+
+         <Button fx:id="registerBtn" layoutX="200.0" layoutY="312.0" mnemonicParsing="false" onAction="#registerClick" text="Register" />
+         <Button layoutX="333.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
+
+         <ImageView fitHeight="68.0" fitWidth="141.0" layoutX="230.0" layoutY="14.0" preserveRatio="true">
+            <image>
+               <Image url="@images/!bearsLogo.png" />
+            </image>
+         </ImageView>
+
+      </AnchorPane>
+   </Group>
+</StackPane>
+
