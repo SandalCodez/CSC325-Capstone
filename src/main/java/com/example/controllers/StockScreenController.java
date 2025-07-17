@@ -7,15 +7,23 @@ import com.example.models.Stock;
 import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -33,12 +41,22 @@ public class StockScreenController {
             sharesOutstandingLabel, numberOfSharesLabel, averageBuyPriceLabel,
             totalValueLabel, gainLossLabel, profitLossLabel, percentOfPortfolioLabel;
 
+
+
     @FXML
     private TextArea companyNewsTextArea;
 
     private final FinnhubService finnhubService = new FinnhubService();
     private String initialTicker = null;
 
+    @FXML
+    private StackPane rootPane;
+    @FXML
+    private Group scalingPane;
+    @FXML
+    private ImageView bgImageView;
+    double baseWidth = 1200;
+    double baseHeight = 800;
 
     public void setInitialTicker(String ticker) {
         this.initialTicker = ticker;
@@ -49,10 +67,25 @@ public class StockScreenController {
     }
 
     @FXML
-    private void initialize() {
+    public void initialize() {
         if (initialTicker != null) {
             loadStockData(initialTicker);
         }
+
+        rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double scale = newVal.doubleValue() / baseWidth;
+            scalingPane.setScaleX(scale);
+            bgImageView.setFitWidth(newVal.doubleValue());
+        });
+
+        rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            double scale = newVal.doubleValue() / baseHeight;
+            scalingPane.setScaleY(scale);
+            bgImageView.setFitHeight(newVal.doubleValue());
+        });
+
+
+
     }
 
     @FXML
