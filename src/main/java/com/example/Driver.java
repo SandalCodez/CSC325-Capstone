@@ -11,12 +11,12 @@ import java.io.IOException;
 public class Driver extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/splash.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
 
-      //  FirestoreDB db = new FirestoreDB();
-      //  db.connect();
+        FirestoreDB db = new FirestoreDB();
+        db.connect();
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
