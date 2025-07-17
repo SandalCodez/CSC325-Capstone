@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -9,6 +10,22 @@
 <?import javafx.scene.text.*?>
 
 <StackPane fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.StockScreenController">
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.StockScreenController">
 
    <ImageView fx:id="bgImageView" preserveRatio="false">
       <image>
@@ -81,13 +98,61 @@
             <Image url="@images/!bearsLogo.png" />
          </image>
       </ImageView>
+
       <VBox layoutX="615.0" layoutY="492.0" maxHeight="Infinity" maxWidth="Infinity" prefHeight="295.0" prefWidth="576.0" spacing="6.0" style="-fx-background-color: #23272f; -fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10;">
          <children>
             <Label style="-fx-text-fill: #4f8cff;" text="Ask ChatGPT">
+
+
+      <Button fx:id="buyButton" layoutX="376.0" layoutY="56.0" prefHeight="25.0" prefWidth="87.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-background-radius: 50; -fx-border-radius: 50;" text="Buy" textFill="WHITE">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button fx:id="sellButton" layoutX="481.0" layoutY="56.0" prefHeight="25.0" prefWidth="95.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Sell" textFill="WHITE">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button fx:id="backToPortfolioButton" layoutX="377.0" layoutY="14.0" onAction="#handleBackToMainPortfolio" prefHeight="33.0" prefWidth="197.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Back to Portfolio Overview" textFill="WHITE">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button fx:id="searchButton" layoutX="120.0" layoutY="35.0" onAction="#handleSearch" prefHeight="25.0" prefWidth="101.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-background-radius: 50; -fx-border-radius: 50;" text="Search" textFill="WHITE">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <TextField fx:id="tickerInputField" layoutX="23.0" layoutY="35.0" prefHeight="25.0" prefWidth="87.0" promptText="Ticker" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50; -fx-prompt-text-fill: #ffffff; -fx-text-fill: #ffffff;">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.5686274766921997" green="0.9686274528503418" blue="0.4941176474094391" />
+               </color>
+            </DropShadow>
+         </effect></TextField>
+      <VBox layoutX="253.0" layoutY="92.0" prefHeight="158.0" prefWidth="330.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;">
+         <children>
+            <Label text="Company News" textFill="#4f8cff">
+
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
+
             <ScrollPane VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="chatHistoryBox" spacing="5.0" />
@@ -110,14 +175,65 @@
          </children>
          <effect>
             <DropShadow>
+
+            <TextArea fx:id="companyNewsTextArea" editable="false" prefHeight="411.0" prefWidth="362.0" wrapText="true" VBox.vgrow="ALWAYS" />
+         </children>
+         <effect>
+            <DropShadow spread="0.15">
+
                <color>
                   <Color red="0.568" green="0.968" blue="0.494" />
                </color>
             </DropShadow>
          </effect>
       </VBox>
+
       <VBox layoutX="20.0" layoutY="200.0" prefHeight="588.0" prefWidth="579.0" style="-fx-background-color: #23272f; -fx-border-color: #45CC2D; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 8;">
          <children>
+
+      <ImageView fitHeight="63.0" fitWidth="164.0" layoutX="227.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/!bearsLogo.png" />
+         </image>
+      </ImageView>
+      <VBox layoutX="253.0" layoutY="253.0" maxHeight="Infinity" maxWidth="Infinity" prefHeight="139.0" prefWidth="330.0" spacing="6.0" style="-fx-background-color: #23272f; -fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10;">
+         <children>
+            <Label style="-fx-text-fill: #4f8cff;" text="Ask ChatGPT">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <ScrollPane VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="chatHistoryBox" spacing="5.0" />
+               </content>
+            </ScrollPane>
+            <HBox prefWidth="197.0" spacing="5.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <TextField fx:id="userInput" onAction="#onSend" prefWidth="142.0" promptText="Have a question?" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="sendBtn" mnemonicParsing="false" onAction="#onSend" style="-fx-background-color: #4f8cff; -fx-border-radius: 50; -fx-background-radius: 50;" text="Send" textFill="WHITE">
+                     <effect>
+                        <DropShadow spread="0.4">
+                           <color>
+                              <Color red="0.014" green="0.113" blue="1.0" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color red="0.568" green="0.968" blue="0.494" />
+               </color>
+            </DropShadow>
+         </effect>
+      </VBox>
+      <VBox layoutX="23.0" layoutY="92.0" prefHeight="301.0" prefWidth="223.0" style="-fx-background-color: #23272f; -fx-border-color: #45CC2D; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 8;">
+         <children>
+
             <VBox prefHeight="130.0" prefWidth="223.0">
                <children>
                   <HBox prefHeight="19.0" prefWidth="223.0">
