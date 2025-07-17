@@ -13,7 +13,7 @@ public class Driver extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/splash.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
+        Scene scene = new Scene(fxmlLoader.load(), 1200 , 800);
 
         FirestoreDB db = new FirestoreDB();
         db.connect();
