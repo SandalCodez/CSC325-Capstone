@@ -10,6 +10,7 @@ import com.example.services.PortfolioIntegration;
 import com.example.services.FirestoreDB;
 import com.example.services.UserSession;
 import com.google.cloud.firestore.Firestore;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,9 +31,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.sound.sampled.Port;
 import java.io.IOException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -415,9 +418,14 @@ public class MainPortfolioController {
 
     @FXML
     private void handleBackToLogIn(ActionEvent event) throws IOException {
-        loggedInUser.logout(); // Clear the session
+        loggedInUser.logout();
+        // Clear the session
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
+
         Parent SignInRoot = fxmlLoader.load();
+
+        SignInController controller = fxmlLoader.getController();
+        controller.setSplashDependencies(db, userAuth, portfolio, finnhubService);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(SignInRoot));
         stage.setTitle("SignIn");
@@ -432,6 +440,10 @@ public class MainPortfolioController {
         stage.setScene(new Scene(SignOutRoot));
         stage.setTitle("SignOut");
         stage.show();
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(actionEvent -> {stage.close();});
+        delay.play();
+
     }
 
     @FXML

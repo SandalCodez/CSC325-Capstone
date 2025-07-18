@@ -18,6 +18,7 @@ public class SignOutController {
 
     public void initialize() {
 
+
         rootPane.widthProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
                 double scale = newVal.doubleValue() / baseWidth;

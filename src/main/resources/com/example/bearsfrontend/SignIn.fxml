@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
+<StackPane fx:id="rootPane"  stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
 
    <ImageView fx:id="bgImageView" preserveRatio="false">
       <image>

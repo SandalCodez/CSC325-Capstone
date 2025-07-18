@@ -67,11 +67,11 @@
                      <padding><Insets top="12.0" /></padding>
                      <font><Font name="System Bold Italic" size="18.0" /></font>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="41.0" prefWidth="142.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Exit" textFill="WHITE" wrapText="true">
+                  <Button mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="41.0" prefWidth="142.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Sign Out" textFill="WHITE" wrapText="true">
                      <HBox.margin><Insets right="8.0" /></HBox.margin>
                      <effect><DropShadow spread="0.15"><color><Color red="0.568" green="0.968" blue="0.494" /></color></DropShadow></effect>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="41.0" prefWidth="136.0" style="-fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-color: #45CC2D; -fx-background-radius: 50;" text="Sign out" textFill="WHITE">
+                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="41.0" prefWidth="136.0" style="-fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-color: #45CC2D; -fx-background-radius: 50;" text="Exit" textFill="WHITE">
                      <effect><DropShadow spread="0.15"><color><Color red="0.568" green="0.968" blue="0.494" /></color></DropShadow></effect>
                   </Button>
                </children>

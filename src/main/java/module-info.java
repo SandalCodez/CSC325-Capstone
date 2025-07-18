@@ -17,6 +17,7 @@ module com.example.models {
 
     requires Java.WebSocket;
     requires com.google.common;
+    requires java.sql;
 
     // Export both packages
     exports com.example.models;

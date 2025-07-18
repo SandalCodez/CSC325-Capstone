@@ -68,8 +68,6 @@ public class SignInController {
 
     }
 
-
-
     public void setFirestoreDB(FirestoreDB db) {
         this.db = db;
     }
@@ -174,6 +172,7 @@ public class SignInController {
 
     @FXML
     public void initialize() {
+
         rootPane.widthProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
                 double scale = newVal.doubleValue() / baseWidth;
