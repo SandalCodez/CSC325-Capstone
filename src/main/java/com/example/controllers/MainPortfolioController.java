@@ -9,6 +9,7 @@ import com.example.services.FinnhubService;
 import com.example.services.PortfolioIntegration;
 import com.example.services.FirestoreDB;
 import com.example.services.UserSession;
+import com.google.cloud.firestore.Firestore;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -71,12 +72,16 @@ public class MainPortfolioController {
 
     @FXML
     private Label percentageGainLossLabel;
+    @FXML
+    private TextField StockSearchField;
 
     @FXML
     private Label balanceLabel;
+    @FXML
+    private Button searchBtn;
 
     @FXML
-    private Button addFundsButton, StockSearchButton, sendBtn;
+    private Button addFundsButton, sendBtn;
 
     private FinnhubService finnhubService = new FinnhubService();
     private final ObservableList<PortfolioEntry> portfolioData = FXCollections.observableArrayList();
@@ -111,26 +116,11 @@ public class MainPortfolioController {
     double baseHeight = 800.0;
 
 
-    public void initialize() {
-        try {
-            // Initialize Firebase and portfolio service
-            FirestoreDB firestoreDB = new FirestoreDB();
-            Firestore db = firestoreDB.connect();
-            portfolioService = new PortfolioIntegration(db);
-            userSession = UserSession.getInstance();
-            userAuth = UserSession.getInstance().getUserAuth();
-            loggedInUser = UserSession.getInstance().getCurrentUser();
 
-            // Set up table columns
-            setupTableColumns();
-
-            // Update balance label
-            if (loggedInUser != null) {
-                balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
-            } else {
-                balanceLabel.setText("Not Available");
-            }
-
+    @FXML
+    private void clearStockSearch(MouseEvent event) {
+        StockSearchField.clear();
+    }
 
     @FXML
     public void initialize() throws ParseException {
@@ -138,6 +128,23 @@ public class MainPortfolioController {
 
             setupTableColumns();
             portfolioTable.setItems(portfolioData);
+
+            rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseWidth;
+                    scalingPane.setScaleX(scale);
+                    bgImageView.setFitWidth(newVal.doubleValue());
+                }
+            });
+
+            rootPane.heightProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseHeight;
+                    scalingPane.setScaleY(scale);
+                    bgImageView.setFitHeight(newVal.doubleValue());
+                }
+            });
+
 
         } catch (Exception e) {
             System.err.println("Error initializing portfolio: " + e.getMessage());
@@ -334,6 +341,13 @@ public class MainPortfolioController {
 
         new Thread(summaryTask).start();
     }
+    @FXML
+    private void handleEnter(ActionEvent event) throws IOException {
+        String input = StockSearchField.getText().trim().toUpperCase();
+        if (!input.isEmpty()) {
+            navigateToStockScreen(input);
+        }
+    }
 
     @FXML
     private void handleRefreshPortfolio() {
@@ -342,6 +356,22 @@ public class MainPortfolioController {
             loadPortfolioSummary();
         }
     }
+    private void navigateToStockScreen(String ticker) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/StockScreen.fxml"));
+        Parent StockScreenRoot = fxmlLoader.load();
+
+        // Pass ticker to StockScreenController if provided
+        if (ticker != null) {
+            StockScreenController controller = fxmlLoader.getController();
+            controller.setInitialTicker(ticker);
+        }
+
+        Stage stage = (Stage) portfolioTable.getScene().getWindow();
+        stage.setScene(new Scene(StockScreenRoot));
+        stage.setTitle("StockScreen");
+        stage.show();
+    }
+
 
     public void refreshPortfolioScreen() {
         if(loggedInUser != null) {

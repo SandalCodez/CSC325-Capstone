@@ -28,12 +28,13 @@ public class SplashController {
     private FinnhubService finnhubService;
 
     @FXML
-    private AnchorPane splashRoot;
+    private StackPane splashRoot;
 
     @FXML private StackPane rootPane;
     @FXML private Group scalingPane;
     @FXML private ImageView bgImageView;
     double baseWidth = 1200;
+    double baseHeight = 800;
 
 
     public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService) {
@@ -63,7 +64,7 @@ public class SplashController {
                 SignInController controller = loader.getController();
                 controller.setSplashDependencies(db, userAuth, portfolio, finnhubService);
 
-                Stage stage = (Stage) splashRoot.getScene().getWindow();
+                Stage stage = (Stage) rootPane.getScene().getWindow();
 
                 stage.setScene(new Scene(signInRoot));
                 stage.setTitle("Sign In");

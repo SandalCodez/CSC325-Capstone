@@ -35,7 +35,7 @@ public class FirestoreDB {
     public Firestore connect() {
         try {
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(getClass().getResourceAsStream("/serviceAccountKey.json")))
+                    .setCredentials(GoogleCredentials.fromStream(getClass().getResourceAsStream("/files/bearsKey.json")))
                     .build();
             FirebaseApp.initializeApp(options);
             System.out.println("Firebase is initialized");

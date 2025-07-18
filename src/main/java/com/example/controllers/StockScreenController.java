@@ -26,9 +26,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -59,7 +57,29 @@ public class StockScreenController {
     private User loggedInUser;
     private String uid;
 
+    @FXML
+    private TextField tickerInputField;
 
+    @FXML
+    private Label tickerLabel, companyNameLabel, industryLabel, currentPriceLabel, marketCapLabel,
+            sharesOutstandingLabel, numberOfSharesLabel, averageBuyPriceLabel,
+            totalValueLabel, gainLossLabel, profitLossLabel, percentOfPortfolioLabel, balanceLabel;
+
+
+    @FXML
+    private TextArea companyNewsTextArea;
+    @FXML
+    private StackPane rootPane;
+    @FXML
+    private Group scalingPane;
+    @FXML
+    private ImageView bgImageView;
+    double baseWidth = 1200;
+    double baseHeight = 800;
+    @FXML
+    private VBox chatHistoryBox;
+    @FXML
+    private TextField userInput;
     public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration, User loggedInUser, String uid) {
         this.db = db;
         this.userAuth = userAuth;
@@ -71,33 +91,6 @@ public class StockScreenController {
         updateBalanceDisplay();
     }
 
-    @FXML
-    private TextField tickerInputField;
-
-    @FXML
-    private Label tickerLabel, companyNameLabel, industryLabel, currentPriceLabel, marketCapLabel,
-            sharesOutstandingLabel, numberOfSharesLabel, averageBuyPriceLabel,
-            totalValueLabel, gainLossLabel, profitLossLabel, percentOfPortfolioLabel, balanceLabel;
-
-
-
-    @FXML
-    private TextArea companyNewsTextArea;
-
-
-    private final FinnhubService finnhubService = new FinnhubService();
-    private String initialTicker = null;
-
-    @FXML
-    private StackPane rootPane;
-    @FXML
-    private Group scalingPane;
-    @FXML
-    private ImageView bgImageView;
-    double baseWidth = 1200;
-    double baseHeight = 800;
-
-
     public void setInitialTicker(String ticker) {
         this.initialTicker = ticker;
         if (ticker != null && !ticker.isEmpty()) {
@@ -107,7 +100,6 @@ public class StockScreenController {
     }
 
     @FXML
-
     public void initialize() {
         if (initialTicker != null) {
             loadStockData(initialTicker);
@@ -124,9 +116,6 @@ public class StockScreenController {
             scalingPane.setScaleY(scale);
             bgImageView.setFitHeight(newVal.doubleValue());
         });
-
-
-
 
     }
 
@@ -296,7 +285,7 @@ public class StockScreenController {
         }
         Date sellDate = new Date();
 
-        try{
+        try {
             portfolioIntegration.sellStock(ticker, quantityToSell, currentPrice, sellDate);
             showAlert("Sell Successful");
         } catch (Exception e) {
@@ -391,8 +380,8 @@ public class StockScreenController {
         percentOfPortfolioLabel.setText(String.format("%.2f%%", percentOfPortfolio));
     }
 
-    public void updateBalanceDisplay(){
-        if(loggedInUser != null && balanceLabel != null){
+    public void updateBalanceDisplay() {
+        if (loggedInUser != null && balanceLabel != null) {
             balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
         }
     }
@@ -408,54 +397,54 @@ public class StockScreenController {
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
     }
+
     public void setUid(String uid) {
         this.uid = uid;
+    }
 
-    @FXML private VBox chatHistoryBox;
-    @FXML
-    private TextField userInput;
 
-    @FXML
-    protected void onSend() {
-        String userMsg = userInput.getText();
-        if (!userMsg.isBlank()) {
-            Label userLabel = new Label("You: " + userMsg);
-            userLabel.setStyle("-fx-background-color: #393939; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
-            userLabel.setWrapText(true);
-            userLabel.setMaxWidth(200);
-            chatHistoryBox.getChildren().add(userLabel);
-            userInput.clear();
+        @FXML
+        protected void onSend () {
+            String userMsg = userInput.getText();
+            if (!userMsg.isBlank()) {
+                Label userLabel = new Label("You: " + userMsg);
+                userLabel.setStyle("-fx-background-color: #393939; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                userLabel.setWrapText(true);
+                userLabel.setMaxWidth(200);
+                chatHistoryBox.getChildren().add(userLabel);
+                userInput.clear();
 
-            // Loading message
-            Label thinkingLabel = new Label("AI: ...thinking...");
-            thinkingLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
-            thinkingLabel.setWrapText(true);
-            thinkingLabel.setMaxWidth(200);
-            chatHistoryBox.getChildren().add(thinkingLabel);
+                // Loading message
+                Label thinkingLabel = new Label("AI: ...thinking...");
+                thinkingLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                thinkingLabel.setWrapText(true);
+                thinkingLabel.setMaxWidth(200);
+                chatHistoryBox.getChildren().add(thinkingLabel);
 
-            new Thread(() -> {
-                try {
-                    // Just use the user's message—no portfolio context!
-                    String aiReply = ChatGPTClient.ask(userMsg);
-                    Platform.runLater(() -> {
-                        chatHistoryBox.getChildren().remove(thinkingLabel);
-                        Label aiLabel = new Label("AI: " + aiReply.trim());
-                        aiLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
-                        aiLabel.setWrapText(true);
-                        aiLabel.setMaxWidth(200);
-                        chatHistoryBox.getChildren().add(aiLabel);
-                    });
-                } catch (Exception ex) {
-                    Platform.runLater(() -> {
-                        chatHistoryBox.getChildren().remove(thinkingLabel);
-                        Label errorLabel = new Label("AI: (Error: " + ex.getMessage() + ")");
-                        errorLabel.setStyle("-fx-background-color: #ff4f4f; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
-                        errorLabel.setWrapText(true);
-                        errorLabel.setMaxWidth(300);
-                        chatHistoryBox.getChildren().add(errorLabel);
-                    });
-                }
-            }).start();
+                new Thread(() -> {
+                    try {
+                        // Just use the user's message—no portfolio context!
+                        String aiReply = ChatGPTClient.ask(userMsg);
+                        Platform.runLater(() -> {
+                            chatHistoryBox.getChildren().remove(thinkingLabel);
+                            Label aiLabel = new Label("AI: " + aiReply.trim());
+                            aiLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                            aiLabel.setWrapText(true);
+                            aiLabel.setMaxWidth(200);
+                            chatHistoryBox.getChildren().add(aiLabel);
+                        });
+                    } catch (Exception ex) {
+                        Platform.runLater(() -> {
+                            chatHistoryBox.getChildren().remove(thinkingLabel);
+                            Label errorLabel = new Label("AI: (Error: " + ex.getMessage() + ")");
+                            errorLabel.setStyle("-fx-background-color: #ff4f4f; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                            errorLabel.setWrapText(true);
+                            errorLabel.setMaxWidth(300);
+                            chatHistoryBox.getChildren().add(errorLabel);
+                        });
+                    }
+                }).start();
+            }
         }
     }
-}
+

@@ -16,6 +16,7 @@ public class PortfolioIntegration {
     private final Portfolio portfolio;
     private UserAuth userAuth;
     private Runnable onSellCompleteCallback;
+    private String uid;
 
 
     public PortfolioIntegration(Firestore db, FinnhubService finnhubService, User loggedInUser, Portfolio portfolio) {
@@ -111,12 +112,13 @@ public class PortfolioIntegration {
         if (currentBalance < totalCost) {
             throw new Exception("Insufficient Funds");
         }
-        loggedInUser.setAccountBalance(currentBalance - totalCost);
-
+        double newBalance = loggedInUser.getAccountBalance() - totalCost;
+        loggedInUser.setAccountBalance(newBalance);
         saveTransaction(tickerSymbol.toUpperCase(), quantity, pricePerShare, true, buyDate);
         savePortfolio(this.portfolio);
 
-
+        String uid = this.loggedInUser.getUserUid();
+        userAuth.updateUserBalance(uid, newBalance);
         System.out.printf("Bought %d shares of %s at $%.2f\n", quantity, tickerSymbol, pricePerShare);
     }
 
