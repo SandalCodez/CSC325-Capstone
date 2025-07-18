@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="rootPane"  stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
+<StackPane fx:id="rootPane" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.SignInController">
 
    <ImageView fx:id="bgImageView" preserveRatio="false">
       <image>
@@ -14,8 +14,8 @@
       </image>
    </ImageView>
 
-   <Group fx:id="scalingPane">
-      <AnchorPane prefHeight="800.0" prefWidth="1200.0">
+   <Group fx:id="scalingPane" >
+      <AnchorPane prefHeight="800.0" prefWidth="1200.0" >
 
          <ImageView fitHeight="228.0" fitWidth="415.0" layoutX="393.0" layoutY="118.0" preserveRatio="true">
             <image>

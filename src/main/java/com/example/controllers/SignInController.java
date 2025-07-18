@@ -6,6 +6,7 @@ import com.example.models.User;
 import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -173,7 +174,7 @@ public class SignInController {
     @FXML
     public void initialize() {
 
-        rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+              rootPane.widthProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
                 double scale = newVal.doubleValue() / baseWidth;
                 scalingPane.setScaleX(scale);

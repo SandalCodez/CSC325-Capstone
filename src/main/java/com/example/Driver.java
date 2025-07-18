@@ -38,6 +38,7 @@ public class Driver extends Application {
 
         stage.setTitle("Sign In");
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
 

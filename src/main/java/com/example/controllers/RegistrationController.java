@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -48,6 +49,8 @@ public class RegistrationController {
 
     @FXML
     private TextField passwordField;
+    @FXML
+    private PasswordField confirmPasswordField;
 
     @FXML private StackPane rootPane;
     @FXML private Group scalingPane;
@@ -84,8 +87,11 @@ public class RegistrationController {
           return;
       }
       if(!(email.equals(emailConfirm))){
-              confPassError.setText("Please confirm your email.");
+              confirmEmailError.setText("Please confirm your email.");
               return;
+      }
+      if(!(password.equals(confirmPasswordField))){
+          confPassError.setText("Passwords do not match.");
       }
           userAuth.registerUser(emailField.getText(), passwordField.getText(), fNameField.getText(), lNameField.getText(), today);
 

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<StackPane  fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.RegistrationController">
+<StackPane fx:id="rootPane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.RegistrationController">
 
    <ImageView fx:id="bgImageView" preserveRatio="false">
       <image>
@@ -18,6 +22,7 @@
       <AnchorPane prefHeight="400.0" prefWidth="600.0">
 
          <TextField fx:id="fNameField" layoutX="66.0" layoutY="118.0" promptText="First Name" />
+         <Label fx:id="fNameError" layoutX="66.0" layoutY="150.0" prefHeight="13.0" prefWidth="58.0" textFill="RED" />
          <TextField fx:id="lNameField" layoutX="387.0" layoutY="118.0" promptText="Last Name" />
          <TextField fx:id="emailField" layoutX="66.0" layoutY="188.0" promptText="Email" />
          <TextField fx:id="confirmEmailField" layoutX="387.0" layoutY="188.0" promptText="Confirm Email" />
@@ -32,8 +37,12 @@
                <Image url="@images/!bearsLogo.png" />
             </image>
          </ImageView>
+         <Label fx:id="lNameError" layoutX="387.0" layoutY="148.0" prefHeight="13.0" prefWidth="58.0" textFill="RED" />
+         <Label fx:id="emailError" layoutX="66.0" layoutY="223.0" prefHeight="13.0" prefWidth="58.0" textFill="RED" />
+         <Label fx:id="confirmEmailError" layoutX="386.0" layoutY="218.0" prefHeight="22.0" prefWidth="152.0" textFill="RED" />
+         <Label fx:id="confPassError" layoutX="386.0" layoutY="287.0" prefHeight="13.0" prefWidth="165.0" textFill="RED" />
+         <Label fx:id="registerError" alignment="CENTER" layoutX="136.0" layoutY="340.0" prefHeight="43.0" prefWidth="329.0" textAlignment="CENTER" textFill="RED" />
 
       </AnchorPane>
    </Group>
 </StackPane>
-

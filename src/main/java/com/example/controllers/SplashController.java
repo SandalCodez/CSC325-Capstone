@@ -68,6 +68,7 @@ public class SplashController {
 
                 stage.setScene(new Scene(signInRoot));
                 stage.setTitle("Sign In");
+                stage.centerOnScreen();
                 stage.show();
             } catch (Exception e) {
                 e.printStackTrace();
