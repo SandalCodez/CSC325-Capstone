@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserAuth {
     private final FirebaseAuth auth;
     private final Firestore db;
+    private User user;
 
     public UserAuth(Firestore db) {
         this.db = db;
@@ -66,7 +67,10 @@ public class UserAuth {
             String uid = userRecord.getUid();
 
             // Get user data from Firestore
-            DocumentSnapshot doc = db.collection("users").document(uid).get().get();
+            DocumentSnapshot doc = db.collection("users")
+                    .document(uid)
+                    .get()
+                    .get();
 
             if (!doc.exists()) {
                 throw new Exception("User data not found");
@@ -94,9 +98,10 @@ public class UserAuth {
             System.out.println("Checking for balance field...");
 
             double balance = 0.0;
-            if (doc.contains("balance")) {
+            if (doc.exists() && doc.contains("balance")) {
                 try {
                     balance = doc.getDouble("balance");
+                    System.out.println("Final balance before return: " + balance);
                 } catch (Exception e) {
                     System.out.println("Error retrieving balance: " + e.getMessage());
                     balance = 0.0;
@@ -155,7 +160,7 @@ public class UserAuth {
                 LocalDate.now(),
                 balance
         );
-
+        this.user = user;
         return user;
     }
 
@@ -172,4 +177,11 @@ public class UserAuth {
         }).start();
     }
 
+    public User getLoggedInUser() {
+        return this.user;
+    }
+
+    public void setUser(User loggedInUser) {
+        this.user = loggedInUser;
+    }
 }

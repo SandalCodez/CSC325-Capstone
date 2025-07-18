@@ -28,6 +28,36 @@
       </image>
    </ImageView>
 
+      <Button fx:id="buyButton" layoutX="376.0" layoutY="56.0" onAction="#handleBuyButtonClick" prefHeight="25.0" prefWidth="87.0" text="Buy" />
+      <Button fx:id="sellButton" layoutX="475.0" layoutY="56.0" onAction="#handleSellButtonClick" prefHeight="25.0" prefWidth="95.0" text="Sell" />
+      <Button fx:id="backToPortfolioButton" layoutX="376.0" layoutY="14.0" onAction="#handleBackToMainPortfolio" prefHeight="33.0" prefWidth="194.0" text="Back to Portfolio Overview" />
+
+      <TextField layoutX="256.0" layoutY="30.0" prefHeight="49.0" prefWidth="101.0" text="!Bears">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <VBox layoutX="33.0" layoutY="94.0" prefHeight="130.0" prefWidth="212.0">
+         <children>
+            <HBox prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Ticker: " textFill="WHITE" />
+                  <Label fx:id="tickerLabel" textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Company Name: " textFill="WHITE" />
+                  <Label fx:id="companyNameLabel" textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="29.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Current Price: " textFill="WHITE" />
+                  <Label fx:id="currentPriceLabel" textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="212.0">
    <Group fx:id="scalingPane" scaleX="0.5" scaleY="0.5">
       <AnchorPane fx:id="mainPane" layoutX="284.0" layoutY="230.0" prefHeight="800.0" prefWidth="1210.0">
          <children>
@@ -80,6 +110,24 @@
                   </Label>
                   <TextArea fx:id="companyNewsTextArea" editable="false" prefHeight="242.0" prefWidth="536.0" wrapText="true" VBox.vgrow="ALWAYS" />
                </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="48.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Market Cap: " textFill="WHITE" />
+                  <Label fx:id="marketCapLabel" textFill="WHITE" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="67.0" prefHeight="19.0" prefWidth="223.0">
+               <children>
+                  <Label text="Shares Outstanding: " textFill="WHITE" />
+                  <Label fx:id="sharesOutstandingLabel" textFill="WHITE" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox layoutX="33.0" layoutY="224.0" prefHeight="147.0" prefWidth="206.0">
+         <children>
+            <HBox prefHeight="19.0" prefWidth="223.0">
                <effect>
                   <DropShadow spread="0.15">
                      <color>
@@ -227,7 +275,16 @@
             </VBox>
 
          </children>
+      </VBox>
+      <Button fx:id="searchButton" layoutX="125.0" layoutY="44.0" onAction="#handleSearch" prefHeight="25.0" prefWidth="101.0" text="Search" />
+      <TextField fx:id="tickerInputField" layoutX="23.0" layoutY="43.0" prefHeight="25.0" prefWidth="87.0" promptText="Ticker" />
+      <TextArea fx:id="companyNewsTextArea" layoutX="253.0" layoutY="100.0" prefHeight="130.0" prefWidth="321.0" promptText="Company News" />
+      <HBox layoutX="25.0" layoutY="21.0" prefHeight="19.0" prefWidth="147.0">
+         <children>
+            <Label text="Balance: " textFill="WHITE" />
+            <Label fx:id="balanceLabel" prefHeight="17.0" prefWidth="97.0" textFill="WHITE" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
 
-      </AnchorPane>
-   </Group>
-</StackPane>

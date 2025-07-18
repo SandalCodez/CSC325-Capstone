@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.application.Platform;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,17 +45,13 @@ public class FinnhubService {
                 // Fetch quote
                 JSONObject quoteJson = fetchJsonFromUrl(quoteUrl);
                 double currentPrice = quoteJson.optDouble("c", 0.0);
-                double high = quoteJson.optDouble("h", 0.0);
-                double low = quoteJson.optDouble("l", 0.0);
-                double open = quoteJson.optDouble("o", 0.0);
-                double previousClose = quoteJson.optDouble("pc", 0.0);
                 double volume = quoteJson.optDouble("v", 0.0);
 
                 // Fetch company name
                 JSONObject companyJson = fetchJsonFromUrl(companyUrl);
                 String companyName = companyJson.optString("name", ticker);
 
-                Stock stock = new Stock(ticker, companyName, currentPrice, high, low, open, volume, previousClose);
+                Stock stock = new Stock(ticker, companyName, currentPrice, volume);
                 stockMap.put(ticker, stock);
 
             } catch (Exception e) {
@@ -225,7 +222,7 @@ public class FinnhubService {
                             JSONArray data = json.optJSONArray("data");
                             if (data != null && data.length() > 0) {
                                 double price = data.getJSONObject(0).optDouble("p", 0.0);
-                                onPriceUpdate.accept(price);
+                                Platform.runLater(() -> onPriceUpdate.accept(price));
                             }
                         } catch (JSONException e) {
                             System.err.println("WebSocket JSON parse error: " + e.getMessage());

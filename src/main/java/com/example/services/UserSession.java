@@ -29,6 +29,10 @@ public class UserSession {
         this.userAuth = userAuth;
     }
 
+    public String getUserUID(){
+        return this.userUid;
+    }
+
     // Get current user
     public User getCurrentUser() {
         return currentUser;

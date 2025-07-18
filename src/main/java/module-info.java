@@ -16,6 +16,7 @@ module com.example.models {
     requires com.fasterxml.jackson.databind;
 
     requires Java.WebSocket;
+    requires com.google.common;
 
     // Export both packages
     exports com.example.models;

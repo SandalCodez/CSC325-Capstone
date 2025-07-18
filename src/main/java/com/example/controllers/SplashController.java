@@ -1,5 +1,10 @@
 package com.example.controllers;
 
+import com.example.models.Portfolio;
+import com.example.services.FinnhubService;
+import com.example.services.FirestoreDB;
+import com.example.services.PortfolioIntegration;
+import com.example.services.UserAuth;
 import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,19 +21,50 @@ import javafx.util.Duration;
 
 public class SplashController {
 
+
+    private FirestoreDB db;
+    private Portfolio portfolio;
+    private UserAuth userAuth;
+    private FinnhubService finnhubService;
+
+    @FXML
+    private AnchorPane splashRoot;
+
     @FXML private StackPane rootPane;
     @FXML private Group scalingPane;
     @FXML private ImageView bgImageView;
     double baseWidth = 1200;
-    double baseHeight = 800;
+
+
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
+    }
+
+    public void setFirestoreDB(FirestoreDB db) {
+        this.db = db;
+    }
 
     @FXML
     public void initialize() {
+       startTransition();
+    }
+
+    public void startTransition() {
         PauseTransition delay = new PauseTransition(Duration.seconds(3));
         delay.setOnFinished(event -> {
             try {
-                Parent signInRoot = FXMLLoader.load(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
-                Stage stage = (Stage) rootPane.getScene().getWindow();
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
+                Parent signInRoot = loader.load();
+
+                SignInController controller = loader.getController();
+                controller.setSplashDependencies(db, userAuth, portfolio, finnhubService);
+
+                Stage stage = (Stage) splashRoot.getScene().getWindow();
+
                 stage.setScene(new Scene(signInRoot));
                 stage.setTitle("Sign In");
                 stage.show();
@@ -37,6 +73,7 @@ public class SplashController {
             }
         });
         delay.play();
+
 
         rootPane.widthProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
@@ -53,6 +90,7 @@ public class SplashController {
                 bgImageView.setFitHeight(newVal.doubleValue());
             }
         });
+
     }
 }
 

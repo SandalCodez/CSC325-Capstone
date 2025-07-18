@@ -1,10 +1,9 @@
 
 package com.example.controllers;
 
+import com.example.models.Portfolio;
 import com.example.models.User;
-import com.example.services.FirebaseAuthService;
-import com.example.services.UserAuth;
-import com.example.services.UserSession;
+import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import javafx.beans.value.ChangeListener;
@@ -38,10 +37,43 @@ public class SignInController {
     private Label signInErrorLabel;
     @FXML
     private Button devSignIn;
-    Firestore firestoreDB = FirestoreClient.getFirestore();
-    UserAuth userAuth = new UserAuth(firestoreDB);
 
+    private FirestoreDB db;
+    private UserAuth userAuth;
     private FirebaseAuthService firebaseAuthService;
+
+    private PortfolioIntegration portfolioIntegration;
+    private Portfolio portfolio;
+    private FinnhubService finnhubService;
+    private User loggedInUser;
+    private String uid;
+
+    public SignInController() {}
+
+    public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration, User loggedInUser, String uid) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
+        this.portfolioIntegration = portfolioIntegration;
+        this.loggedInUser = loggedInUser;
+        this.uid = uid;
+    }
+
+    public void setSplashDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService) {
+        this.db = db;
+        this.userAuth = userAuth;
+        this.portfolio = portfolio;
+        this.finnhubService = finnhubService;
+
+    }
+
+
+
+    public void setFirestoreDB(FirestoreDB db) {
+        this.db = db;
+    }
+
     @FXML
     private StackPane rootPane;
     @FXML
@@ -50,6 +82,7 @@ public class SignInController {
     private ImageView bgImageView;
     double baseWidth = 1200;
     double baseHeight = 800;
+
 
 
     //===================================DELETE THIS========================================
@@ -80,30 +113,48 @@ public class SignInController {
             // turn this into a label
             signInErrorLabel.setText("Username and Password are empty");
             return;
-
         }
-        try {
-            User user = userAuth.loginUser(email, password);
 
-            // Get the UID from userAuth
-            String uid = userAuth.getCurrentUserUid();
+            try {
+                this.loggedInUser = userAuth.loginUser(email, password);
+                System.out.println("loggedInUser UID before set: " + this.loggedInUser.getUid() );
 
-            // Store in session with both User object and UID
-            UserSession.getInstance().setCurrentUser(user, uid, userAuth);
+                this.userAuth.setUser(this.loggedInUser);
+                this.loggedInUser.setUserUid(userAuth.getCurrentUserUid());
 
-            System.out.println(("Login successful! Welcome " + user.getfName() + "success"));
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
-            Parent MainPortfolioRoot = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(MainPortfolioRoot));
-            stage.setTitle("MainPortfolio");
-            stage.show();
+                System.out.println("loggedInUser UID AFTER set: " + this.loggedInUser.getUid() );
 
 
-        } catch (Exception e) {
-            signInErrorLabel.setText("Login failed: " + e.getMessage());
+                PortfolioIntegration portfolioIntegration = new PortfolioIntegration(db.getFirestore(), finnhubService,userAuth, loggedInUser, portfolio);
+
+                // Get the UID from userAuth
+                this.uid = userAuth.getCurrentUserUid();
+
+                System.out.println(("Login successful! Welcome " + loggedInUser.getfName()+ ", success"));
+                System.out.println("Balance after login: " + portfolio.getBalance());
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
+                Parent MainPortfolioRoot = fxmlLoader.load();
+
+                MainPortfolioController controller = fxmlLoader.getController();
+
+                controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration, loggedInUser, uid);
+
+                db.setPortfolioIntegration(portfolioIntegration);
+
+                controller.initializeData();
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(MainPortfolioRoot));
+                stage.setTitle("MainPortfolio");
+                stage.show();
+
+            } catch (Exception e) {
+                signInErrorLabel.setText("Login failed: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
-    }
+
+
 
 
     @FXML
@@ -132,6 +183,15 @@ public class SignInController {
         passwordField.clear();
     }
 
+    public SignInController(FirestoreDB db) {
+        this.db = db;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+
+
     @FXML
     public void initialize() {
         rootPane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -151,5 +211,6 @@ public class SignInController {
         });
 
     }
+
 }
 

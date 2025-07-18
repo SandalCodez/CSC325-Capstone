@@ -5,21 +5,14 @@ public class Stock {
     private String tickerSymbol;
     private String companyName;
     private double currentPrice;
-    private double high;
-    private double low;
-    private double open;
     private double volume;
-    private double previousClose;
 
-    public Stock(String tickerSymbol, String companyName, double currentPrice, double high, double low, double open, double volume, double previousClose) {
+
+    public Stock(String tickerSymbol, String companyName, double currentPrice,double volume) {
         this.tickerSymbol = tickerSymbol;
         this.companyName = companyName;
         this.currentPrice = currentPrice;
-        this.high = currentPrice;
-        this.low = currentPrice;
-        this.open = currentPrice;
         this.volume = currentPrice;
-        this.previousClose = currentPrice;
     }
 
     public String getTickerSymbol() {
@@ -46,29 +39,6 @@ public class Stock {
         this.currentPrice = currentPrice;
     }
 
-    public double getHigh() {
-        return high;
-    }
-
-    public void setHigh(double high) {
-        this.high = high;
-    }
-
-    public double getLow() {
-        return low;
-    }
-
-    public void setLow(double low) {
-        this.low = low;
-    }
-
-    public double getOpen() {
-        return open;
-    }
-
-    public void setOpen(double open) {
-        this.open = open;
-    }
 
     public double getVolume() {
         return volume;
@@ -78,13 +48,6 @@ public class Stock {
         this.volume = volume;
     }
 
-    public double getPreviousClose() {
-        return previousClose;
-    }
-
-    public void setPreviousClose(double previousClose) {
-        this.previousClose = previousClose;
-    }
 
     @Override
     public String toString() {
@@ -92,11 +55,7 @@ public class Stock {
                 "tickerSymbol='" + tickerSymbol + '\'' +
                 ", companyName='" + companyName + '\'' +
                 ", currentPrice=" + currentPrice +
-                ", high=" + high +
-                ", low=" + low +
-                ", open=" + open +
                 ", volume=" + volume +
-                ", previousClose=" + previousClose +
                 '}';
     }
 }
