@@ -39,8 +39,6 @@
             <font><Font size="18.0" /></font>
          </Button>
 
-         <Button fx:id="devSignIn" layoutX="800.0" layoutY="530.0" onAction="#psuedoLogin" text="devSignIn" />
-
          <Label fx:id="signInErrorLabel" alignment="CENTER" layoutX="370.0" layoutY="570.0" prefWidth="460.0" textAlignment="CENTER" textFill="RED" />
 
       </AnchorPane>

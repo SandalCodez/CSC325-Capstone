@@ -84,26 +84,6 @@ public class SignInController {
     double baseHeight = 800;
 
 
-
-    //===================================DELETE THIS========================================
-    //*** Developer bypass
-    //**
-    //**
-    @FXML
-    void psuedoLogin(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
-        Parent MainPortfolioRoot = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(MainPortfolioRoot));
-        stage.setTitle("MainPortfolio");
-        stage.show();
-    }
-    //**
-    //**
-    //*** Developer bypass
-    //=================================================================================
-
-
     @FXML
     private void handleLogin(ActionEvent event) throws IOException {
         String email = usernameField.getText();
