@@ -6,16 +6,21 @@ import com.example.models.User;
 import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -36,6 +41,7 @@ public class SignInController {
     private FirestoreDB db;
     private UserAuth userAuth;
     private FirebaseAuthService firebaseAuthService;
+
     private PortfolioIntegration portfolioIntegration;
     private Portfolio portfolio;
     private FinnhubService finnhubService;
@@ -68,7 +74,18 @@ public class SignInController {
         this.db = db;
     }
 
-//===================================DELETE THIS========================================
+    @FXML
+    private StackPane rootPane;
+    @FXML
+    private Group scalingPane;
+    @FXML
+    private ImageView bgImageView;
+    double baseWidth = 1200;
+    double baseHeight = 800;
+
+
+
+    //===================================DELETE THIS========================================
     //*** Developer bypass
     //**
     //**
@@ -92,11 +109,12 @@ public class SignInController {
         String email = usernameField.getText();
         String password = passwordField.getText();
 
-        if(email.isEmpty() || password.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty()) {
             // turn this into a label
             signInErrorLabel.setText("Username and Password are empty");
             return;
         }
+
             try {
                 this.loggedInUser = userAuth.loginUser(email, password);
                 System.out.println("loggedInUser UID before set: " + this.loggedInUser.getUid() );
@@ -138,6 +156,7 @@ public class SignInController {
 
 
 
+
     @FXML
     private void handleNewUsers(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/Registration.fxml"));
@@ -163,11 +182,34 @@ public class SignInController {
     private void clearPassword(MouseEvent event) {
         passwordField.clear();
     }
+
     public SignInController(FirestoreDB db) {
         this.db = db;
     }
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+
+
+    @FXML
+    public void initialize() {
+        rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                double scale = newVal.doubleValue() / baseWidth;
+                scalingPane.setScaleX(scale);
+                bgImageView.setFitWidth(newVal.doubleValue());
+            }
+        });
+
+        rootPane.heightProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                double scale = newVal.doubleValue() / baseHeight;
+                scalingPane.setScaleY(scale);
+                bgImageView.setFitHeight(newVal.doubleValue());
+            }
+        });
+
     }
 
 }

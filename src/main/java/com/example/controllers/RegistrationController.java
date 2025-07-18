@@ -4,14 +4,19 @@ import com.example.services.FirestoreDB;
 import com.example.services.UserAuth;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -43,6 +48,13 @@ public class RegistrationController {
 
     @FXML
     private TextField passwordField;
+
+    @FXML private StackPane rootPane;
+    @FXML private Group scalingPane;
+    @FXML private ImageView bgImageView;
+    double baseWidth = 600;
+    double baseHeight = 400;
+
 
     @FXML
     private void handleBackToLogin(ActionEvent event) throws IOException {
@@ -84,7 +96,25 @@ public class RegistrationController {
         System.out.println("Register: " + fNameField.getText() + " " + lNameField.getText() + " " + emailField.getText() + " " + passwordField.getText());
     }
 
+    public void initialize() {
+        rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                double scale = newVal.doubleValue() / baseWidth;
+                scalingPane.setScaleX(scale);
+                bgImageView.setFitWidth(newVal.doubleValue());
+            }
+        });
+
+        rootPane.heightProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                double scale = newVal.doubleValue() / baseHeight;
+                scalingPane.setScaleY(scale);
+                bgImageView.setFitHeight(newVal.doubleValue());
+            }
+        });
     }
+
+}
 
 
 

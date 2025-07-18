@@ -19,7 +19,9 @@ import java.io.IOException;
 
 public class Driver extends Application {
     @Override
+
     public void start(Stage stage) throws Exception {
+
 
         FirestoreDB db = new FirestoreDB();
         db.connect();

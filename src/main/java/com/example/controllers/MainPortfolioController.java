@@ -10,18 +10,24 @@ import com.example.services.PortfolioIntegration;
 import com.example.services.FirestoreDB;
 import com.example.services.UserSession;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.Port;
@@ -55,7 +61,7 @@ public class MainPortfolioController {
     private TextField userInput;
 
     @FXML
-    private TextArea chatArea;
+    private VBox chatArea;
 
     @FXML
     private Label totalValueLabel;
@@ -87,6 +93,7 @@ public class MainPortfolioController {
         this.portfolioIntegration = db.getPortfolioIntegration();
     }
 
+
     public void setDependencies(FirestoreDB db, UserAuth userAuth, Portfolio portfolio, FinnhubService finnhubService, PortfolioIntegration portfolioIntegration, User loggedInUser, String uid) {
         this.db = db;
         this.userAuth = userAuth;
@@ -96,6 +103,34 @@ public class MainPortfolioController {
         this.loggedInUser = loggedInUser;
         this.uid = uid;
     }
+
+    @FXML private StackPane rootPane;
+    @FXML private Group scalingPane;
+    @FXML private ImageView bgImageView;
+    double baseWidth = 1200.0;
+    double baseHeight = 800.0;
+
+
+    public void initialize() {
+        try {
+            // Initialize Firebase and portfolio service
+            FirestoreDB firestoreDB = new FirestoreDB();
+            Firestore db = firestoreDB.connect();
+            portfolioService = new PortfolioIntegration(db);
+            userSession = UserSession.getInstance();
+            userAuth = UserSession.getInstance().getUserAuth();
+            loggedInUser = UserSession.getInstance().getCurrentUser();
+
+            // Set up table columns
+            setupTableColumns();
+
+            // Update balance label
+            if (loggedInUser != null) {
+                balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));
+            } else {
+                balanceLabel.setText("Not Available");
+            }
+
 
     @FXML
     public void initialize() throws ParseException {
@@ -112,6 +147,24 @@ public class MainPortfolioController {
             loadTestData();
             portfolioTable.setItems(portfolioData);
             loadMarketNews();
+
+            rootPane.widthProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseWidth;
+                    scalingPane.setScaleX(scale);
+                    bgImageView.setFitWidth(newVal.doubleValue());
+                }
+            });
+
+            rootPane.heightProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> observable, Number oldVal, Number newVal) {
+                    double scale = newVal.doubleValue() / baseHeight;
+                    scalingPane.setScaleY(scale);
+                    bgImageView.setFitHeight(newVal.doubleValue());
+                }
+            });
+
+
         }
     }
 
@@ -405,15 +458,26 @@ public class MainPortfolioController {
                 "TSLA", "Tesla Inc", 8, 700.0, tslaDate));
     }
 
+    @FXML private VBox chatHistoryBox;
+
     @FXML
     protected void onSend() {
         String userMsg = userInput.getText();
         if (!userMsg.isBlank()) {
-            chatArea.appendText("You: " + userMsg + "\n");
+            Label userLabel = new Label("You: " + userMsg);
+            userLabel.setStyle("-fx-background-color: #393939; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+            userLabel.setWrapText(true);
+            userLabel.setMaxWidth(200);
+            chatHistoryBox.getChildren().add(userLabel);
             userInput.clear();
 
             // Loading message
-            chatArea.appendText("AI: ...thinking...\n");
+            Label thinkingLabel = new Label("AI: ...thinking...");
+            thinkingLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+            thinkingLabel.setWrapText(true);
+            thinkingLabel.setMaxWidth(200);
+            chatHistoryBox.getChildren().add(thinkingLabel);
+
 
             new Thread(() -> {
                 try {
@@ -424,17 +488,21 @@ public class MainPortfolioController {
                     String aiReply = ChatGPTClient.ask(enhancedPrompt);
                     Platform.runLater(() -> {
                         // Remove the "thinking" message and add the real response
-                        String currentText = chatArea.getText();
-                        String withoutThinking = currentText.replace("AI: ...thinking...\n", "");
-                        chatArea.setText(withoutThinking);
-                        chatArea.appendText("AI: " + aiReply.trim() + "\n\n");
+                        chatHistoryBox.getChildren().remove(thinkingLabel);
+                        Label aiLabel = new Label("AI: " + aiReply.trim());
+                        aiLabel.setStyle("-fx-background-color: #4f8cff; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                        aiLabel.setWrapText(true);
+                        aiLabel.setMaxWidth(200);
+                        chatHistoryBox.getChildren().add(aiLabel);
                     });
                 } catch (Exception ex) {
                     Platform.runLater(() -> {
-                        String currentText = chatArea.getText();
-                        String withoutThinking = currentText.replace("AI: ...thinking...\n", "");
-                        chatArea.setText(withoutThinking);
-                        chatArea.appendText("AI: (Error: " + ex.getMessage() + ")\n\n");
+                        chatHistoryBox.getChildren().remove(thinkingLabel);
+                        Label errorLabel = new Label("AI: (Error: " + ex.getMessage() + ")");
+                        errorLabel.setStyle("-fx-background-color: #ff4f4f; -fx-text-fill: white; -fx-padding: 5 10 5 10; -fx-background-radius: 10;");
+                        errorLabel.setWrapText(true);
+                        errorLabel.setMaxWidth(300);
+                        chatHistoryBox.getChildren().add(errorLabel);
                     });
                 }
             }).start();
