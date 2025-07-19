@@ -27,7 +27,6 @@ public class UserAuth {
 
     // Updated register method with password hashing
     public String registerUser(String email, String password, String firstName, String lastName, LocalDate createdAt) throws Exception {
-        // Create Firebase Auth user (without password - we'll manage passwords ourselves)
         CreateRequest request = new CreateRequest()
                 .setEmail(email)
                 .setDisplayName(firstName + " " + lastName);
@@ -35,17 +34,15 @@ public class UserAuth {
         UserRecord userRecord = auth.createUser(request);
         String uid = userRecord.getUid();
 
-        // Hash the password
         String[] saltAndHash = PasswordUtils.hashPasswordWithSalt(password);
         String salt = saltAndHash[0];
         String passwordHash = saltAndHash[1];
 
-        // Create user document with password hash - matching your User model field names
         Map<String, Object> userData = new HashMap<>();
-        userData.put("fName", firstName);           // Using your field name
-        userData.put("lName", lastName);            // Using your field name
+        userData.put("fName", firstName);           // Using field name
+        userData.put("lName", lastName);            // Using field name
         userData.put("email", email);
-        userData.put("hashedPass", passwordHash);   // Using your field name
+        userData.put("hashedPass", passwordHash);   // Using field name
         userData.put("salt", salt);                 // Store salt separately
         userData.put("createdAt", new Date());
         userData.put("balance", 0.0);
@@ -110,15 +107,12 @@ public class UserAuth {
                 System.out.println("Balance field not found, defaulting to 0.0");
             }
 
-            // Create and return User object using your constructor
-            // Note: Your constructor expects hashedPass, but we don't want to return it for security
-            // So I'll create a simplified version
             User user = new User(
                     doc.getString("fName"),
                     doc.getString("lName"),
                     "", // Empty string for hashedPass - don't return password hash
                     doc.getString("email"),
-                    LocalDate.now(),// Your constructor uses LocalDate but stores Date - this is a design choice
+                    LocalDate.now(),
                     balance
             );
 
@@ -132,36 +126,6 @@ public class UserAuth {
     // Get the UID of the last logged-in user
     public String getCurrentUserUid() {
         return currentUserUid;
-    }
-
-    // Keep the original token-based login for compatibility if needed
-    public User loginUserWithToken(String idToken) throws Exception {
-        FirebaseToken decodedToken = auth.verifyIdToken(idToken);
-        String uid = decodedToken.getUid();
-
-        DocumentSnapshot doc = db.collection("users").document(uid).get().get();
-        if (!doc.exists()) {
-            throw new Exception("User data not found in database");
-        }
-
-        // Update last login
-        db.collection("users").document(uid)
-                .update("lastLogin", new Date()).get();
-
-
-        double balance = doc.contains("balance") ? doc.getDouble("balance") : 0.0;
-
-        // Create and return User object
-        User user = new User(
-                doc.getString("fName"),
-                doc.getString("lName"),
-                "", // Don't return password hash
-                doc.getString("email"),
-                LocalDate.now(),
-                balance
-        );
-        this.user = user;
-        return user;
     }
 
     public void updateUserBalance(String uid, double newBalance) {

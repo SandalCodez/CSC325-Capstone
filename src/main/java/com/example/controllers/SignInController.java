@@ -89,7 +89,6 @@ public class SignInController {
         String password = passwordField.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
-            // turn this into a label
             signInErrorLabel.setText("Username and Password are empty");
             return;
         }
@@ -140,6 +139,11 @@ public class SignInController {
     private void handleNewUsers(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/Registration.fxml"));
         Parent RegistrationRoot = fxmlLoader.load();
+
+        RegistrationController controller = fxmlLoader.getController();
+        controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration, loggedInUser, uid);
+
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(RegistrationRoot));
         stage.setTitle("Registration");
