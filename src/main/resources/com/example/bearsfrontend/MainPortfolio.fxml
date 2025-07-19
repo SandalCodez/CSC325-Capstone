@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<StackPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.MainPortfolioController">
+<StackPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controllers.MainPortfolioController">
 
    <ImageView fx:id="bgImageView" preserveRatio="false">
       <image>
@@ -31,26 +21,19 @@
       <BorderPane prefHeight="800.0" prefWidth="1200.0">
          <top>
             <HBox prefHeight="42.0" prefWidth="168.0">
+
+               <Label fx:id="space0" prefHeight="39.0" prefWidth="45.0" textFill="WHITE">
+                  <padding><Insets top="12.0" /></padding>
+                  <font><Font name="System Bold Italic" size="18.0" /></font>
+               </Label>
+
                <children>
-                  <Label prefHeight="177.0" prefWidth="92.0" text="Balance: " textFill="#39ff43">
-                     <padding><Insets top="12.0" /></padding>
-                     <font><Font name="System Bold" size="18.0" /></font>
-                  </Label>
-                  <Label fx:id="balanceLabel" prefHeight="39.0" prefWidth="145.0" text="11111111111" textFill="WHITE">
-                     <padding><Insets top="12.0" /></padding>
-                     <font><Font name="System Bold Italic" size="18.0" /></font>
-                     <HBox.margin>
-                        <Insets top="70.0" />
-                     </HBox.margin>
-                  </Label>
+
                   <Button fx:id="addFundsButton" mnemonicParsing="false" onAction="#handleAddFunds" prefHeight="41.0" prefWidth="142.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Add Funds" textFill="WHITE">
                      <HBox.margin><Insets right="8.0" /></HBox.margin>
                      <effect><DropShadow spread="0.15"><color><Color red="0.568" green="0.968" blue="0.494" /></color></DropShadow></effect>
                   </Button>
-                  <Label fx:id="space1" prefHeight="39.0" prefWidth="19.0" textFill="WHITE">
-                     <padding><Insets top="12.0" /></padding>
-                     <font><Font name="System Bold Italic" size="18.0" /></font>
-                  </Label>
+
                   <Button fx:id="searchBtn" layoutX="89.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleToStockScreen" prefHeight="41.0" prefWidth="142.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Stock Search" textFill="WHITE">
                      <effect>
                         <DropShadow spread="0.15">
@@ -60,28 +43,70 @@
                         </DropShadow>
                      </effect>
                   </Button>
-                  <ImageView fitHeight="177.0" fitWidth="417.0" pickOnBounds="true" preserveRatio="true">
-                     <image><Image url="@images/!bearsLogo.png" /></image>
-                  </ImageView>
-                  <Label fx:id="space2" prefHeight="39.0" prefWidth="34.0" textFill="WHITE">
+
+                  <Label fx:id="space3" prefHeight="39.0" prefWidth="50.0" textFill="WHITE">
                      <padding><Insets top="12.0" /></padding>
                      <font><Font name="System Bold Italic" size="18.0" /></font>
                   </Label>
+
+                  <ImageView fitHeight="177.0" fitWidth="417.0" pickOnBounds="true" preserveRatio="true">
+                     <image><Image url="@images/!bearsLogo.png" /></image>
+                  </ImageView>
+
+                  <Label fx:id="space4" prefHeight="39.0" prefWidth="50.0" textFill="WHITE">
+                     <padding><Insets top="12.0" /></padding>
+                     <font><Font name="System Bold Italic" size="18.0" /></font>
+                  </Label>
+
                   <Button mnemonicParsing="false" onAction="#handleBackToLogIn" prefHeight="41.0" prefWidth="142.0" style="-fx-background-color: #45CC2D; -fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-radius: 50;" text="Sign Out" textFill="WHITE" wrapText="true">
                      <HBox.margin><Insets right="8.0" /></HBox.margin>
                      <effect><DropShadow spread="0.15"><color><Color red="0.568" green="0.968" blue="0.494" /></color></DropShadow></effect>
+
+                     <Label fx:id="space5" prefHeight="39.0" prefWidth="19.0" textFill="WHITE">
+                        <padding><Insets top="12.0" /></padding>
+                        <font><Font name="System Bold Italic" size="18.0" /></font>
+                     </Label>
+
+
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="41.0" prefWidth="136.0" style="-fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-color: #45CC2D; -fx-background-radius: 50;" text="Exit" textFill="WHITE">
+                  <Button mnemonicParsing="false" onAction="#handleToSignOut" prefHeight="41.0" prefWidth="142.0" style="-fx-border-color: #91f77e; -fx-border-radius: 50; -fx-background-color: #45CC2D; -fx-background-radius: 50;" text="Exit" textFill="WHITE">
                      <effect><DropShadow spread="0.15"><color><Color red="0.568" green="0.968" blue="0.494" /></color></DropShadow></effect>
                   </Button>
                </children>
             </HBox>
          </top>
          <left>
+
             <VBox prefHeight="442.0" prefWidth="230.0" spacing="8.0" BorderPane.alignment="CENTER_LEFT">
                <children>
+
+                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                     <children>
+                        <Label fx:id="space6" prefHeight="39.0" prefWidth="26.0" textFill="WHITE">
+                           <padding>
+                              <Insets top="12.0" />
+                           </padding>
+                           <font>
+                              <Font name="System Bold Italic" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="30.0" text="Balance:" textFill="#39ff43">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="balanceLabel" prefHeight="30.0" text="11111111111" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+
                   <VBox prefHeight="452.0" prefWidth="228.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;">
                      <children>
+
+
                         <Label text="Market News" textFill="#4f8cff">
                            <font><Font name="System Bold" size="14.0" /></font>
                         </Label>
