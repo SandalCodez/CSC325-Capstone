@@ -21,8 +21,6 @@ public class Driver extends Application {
     @Override
 
     public void start(Stage stage) throws Exception {
-
-
         FirestoreDB db = new FirestoreDB();
         db.connect();
         UserAuth userAuth = new UserAuth(db.getFirestore());

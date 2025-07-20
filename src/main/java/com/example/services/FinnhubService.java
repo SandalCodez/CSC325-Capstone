@@ -202,7 +202,6 @@ public class FinnhubService {
         try {
             String url = "https://finnhub.io/api/v1/stock/market-status?exchange=US&token=" + API_KEY;
             JSONObject response = fetchJsonFromUrl(url);
-            System.out.println("Market status response: " + response);
             JSONObject json = fetchJsonFromUrl(url);
             return json.optBoolean("isOpen", false);
         } catch (Exception e) {
@@ -233,7 +232,6 @@ public class FinnhubService {
                 wsClient.startClient(); // starts the WebSocket
 
             } catch (URISyntaxException e) {
-                System.err.println("WebSocket URI error: " + e.getMessage());
                 // fallback to REST if WebSocket fails
                 Stock stock = getQuoteForTicker(symbol);
                 onPriceUpdate.accept(stock.getCurrentPrice());

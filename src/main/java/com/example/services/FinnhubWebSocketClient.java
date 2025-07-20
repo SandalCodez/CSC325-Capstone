@@ -16,7 +16,6 @@ public class FinnhubWebSocketClient extends WebSocketClient {
             Properties prop = new Properties();
             prop.load(input);
             API_KEY = prop.getProperty("finnhub.api.key");
-            System.out.println("Loaded API KEY: " + API_KEY);
         } catch (Exception e) {
             System.err.println("Error loading API key: " + e.getMessage());
         }
@@ -31,7 +30,7 @@ public class FinnhubWebSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("Connected to Finnhub WebSocket.");
+
         String message = "{\"type\":\"subscribe\",\"symbol\":\"" + symbol + "\"}";
         send(message);
     }
