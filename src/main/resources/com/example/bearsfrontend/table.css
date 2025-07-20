@@ -1,0 +1,22 @@
+.portfolio-table {
+    -fx-background-color: #384054;
+    -fx-background-radius: 5;
+    -fx-table-cell-border-color: #282b33;
+    -fx-padding: 5;
+}
+.portfolio-table .column-header-background {
+    -fx-background-color: #1e2228;
+}
+.portfolio-table .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #4f8cff;
+}
+.table-row-cell:odd {
+    -fx-background-color: #384054;
+}
+.table-row-cell:even {
+    -fx-background-color: #23272f;
+}
+.table-cell {
+    -fx-text-fill: white;
+}
