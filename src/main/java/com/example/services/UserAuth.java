@@ -131,7 +131,6 @@ public class UserAuth {
                 ApiFuture<WriteResult> future = db.collection("users").document(uid)
                         .update("balance", newBalance);
                 future.get();  // wait for completion
-                System.out.println("Balance updated (async).");
             } catch (Exception e) {
                 System.out.println("Error updating balance (async): " + e.getMessage());
             }

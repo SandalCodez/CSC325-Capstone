@@ -43,7 +43,6 @@ public class Portfolio {
             String existing = holdings.get(i).getTickerSymbol();
             if (existing.equals(ticker)) {
                 holdings.set(i, entry); // Replace existing
-                System.out.println("Replaced entry for: " + ticker + "with shares" + entry.getTotalShares());
                 return;
             }
         }

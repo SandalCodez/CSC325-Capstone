@@ -76,7 +76,6 @@ public class PortfolioIntegration {
             throw new Exception("User must be logged in");
         }
 
-        System.out.println("DEBUG Portfolio Integration balance " + loggedInUser.getAccountBalance());
         if (quantity <= 0) throw new Exception("Quantity must be positive");
         if (pricePerShare <= 0) throw new Exception("Price must be positive");
 
@@ -105,10 +104,7 @@ public class PortfolioIntegration {
             updatedEntry = PortfolioEntry.fromStock(tickerSymbol, companyName, newTotalShares, newAveragePrice, buyDate, stockData.getCurrentPrice());
         }
 
-        System.out.println();
         double currentBalance = loggedInUser.getAccountBalance();
-        System.out.println("Total cost debug: " + totalCost);
-        System.out.println("Current balance debug infinity: " + currentBalance);
         if (currentBalance < totalCost) {
             throw new Exception("Insufficient Funds");
         }
@@ -119,11 +115,9 @@ public class PortfolioIntegration {
 
         String uid = this.loggedInUser.getUserUid();
         userAuth.updateUserBalance(uid, newBalance);
-        System.out.printf("Bought %d shares of %s at $%.2f\n", quantity, tickerSymbol, pricePerShare);
     }
 
     public void sellStock(String tickerSymbol, int quantity, double pricePerShare, Date sellDate) throws Exception {
-        System.out.println("SELL START: quantity = " + quantity + ", stock ticker = " + tickerSymbol);
 
         if (this.loggedInUser == null) {
             throw new Exception("User must be logged in");
@@ -174,7 +168,6 @@ public class PortfolioIntegration {
 
         loggedInUser.setAccountBalance(updatedBalance);
         userAuth.updateUserBalance(loggedInUser.getUserUid(), updatedBalance);
-        System.out.println("Updated shares for: " + existingEntry.getTickerSymbol() + ": " + existingEntry.getTotalShares());
         savePortfolio(this.portfolio);
 
         if (onSellCompleteCallback != null) {
@@ -228,9 +221,6 @@ public class PortfolioIntegration {
 
         // Restore the previously loaded balance
         this.portfolio.setBalance(existingBalance);
-
-        // Optional: Log for verification
-        System.out.println("Portfolio prices updated, balance preserved: " + existingBalance);
     }
 
 
@@ -361,7 +351,6 @@ public class PortfolioIntegration {
         portfolioData.put("userId", portfolio.getUserId());
 
         List<Map<String, Object>> holdingsData = new ArrayList<>();
-        System.out.println("Holdings before save:");
         for (PortfolioEntry entry : portfolio.getHoldings()) {
             holdingsData.add(entry.toMap());
         }
