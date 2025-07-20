@@ -142,6 +142,7 @@ public class SignInController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(RegistrationRoot));
         stage.setTitle("Registration");
+
         stage.show();
     }
 

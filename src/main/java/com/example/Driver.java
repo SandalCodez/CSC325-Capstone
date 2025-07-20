@@ -5,10 +5,7 @@ import com.example.controllers.SignInController;
 import com.example.controllers.SplashController;
 import com.example.models.Portfolio;
 import com.example.models.User;
-import com.example.services.FinnhubService;
-import com.example.services.FirestoreDB;
-import com.example.services.PortfolioIntegration;
-import com.example.services.UserAuth;
+import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +33,7 @@ public class Driver extends Application {
         stage.setTitle("Sign In");
         stage.setScene(scene);
         stage.centerOnScreen();
+        WindowIcon.setIcon(stage);
         stage.show();
     }
 

@@ -87,6 +87,9 @@ public class RegistrationController {
     @FXML
     private void handleBackToLogin(ActionEvent event) throws IOException {
 
+        loggedInUser.logout();
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
         Parent SignInRoot = fxmlLoader.load();
         SignInController controller = fxmlLoader.getController();
