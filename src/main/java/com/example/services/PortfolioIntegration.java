@@ -95,8 +95,8 @@ public class PortfolioIntegration {
 
         if (existingEntry != null) {
             int newTotalShares = existingEntry.getTotalShares() + quantity;
-            totalCost = (existingEntry.getTotalShares() * existingEntry.getBuyPrice()) + (quantity * pricePerShare);
-            double newAveragePrice = totalCost / newTotalShares;
+            totalCost =  + quantity * pricePerShare;
+            double newAveragePrice = ((existingEntry.getTotalShares() * existingEntry.getBuyPrice()) + (quantity * pricePerShare)) / newTotalShares;
             updatedEntry = PortfolioEntry.fromStock(tickerSymbol, companyName, newTotalShares, newAveragePrice, buyDate, stockData.getCurrentPrice());
         } else {
             int newTotalShares = quantity;
@@ -123,6 +123,8 @@ public class PortfolioIntegration {
     }
 
     public void sellStock(String tickerSymbol, int quantity, double pricePerShare, Date sellDate) throws Exception {
+        System.out.println("SELL START: quantity = " + quantity + ", stock ticker = " + tickerSymbol);
+
         if (this.loggedInUser == null) {
             throw new Exception("User must be logged in");
         }
@@ -164,7 +166,7 @@ public class PortfolioIntegration {
         }
 
         // Record the sale as a transaction
-        saveTransaction(tickerSymbol.toUpperCase(), quantity, pricePerShare, false, sellDate);
+        saveSellTransaction(tickerSymbol.toUpperCase(), existingEntry.getCompanyName(), quantity, pricePerShare,  sellDate);
 
         // Update user's account balance (they received money)
         double proceeds = quantity * pricePerShare;
@@ -172,7 +174,8 @@ public class PortfolioIntegration {
 
         loggedInUser.setAccountBalance(updatedBalance);
         userAuth.updateUserBalance(loggedInUser.getUserUid(), updatedBalance);
-        savePortfolio(portfolio);
+        System.out.println("Updated shares for: " + existingEntry.getTickerSymbol() + ": " + existingEntry.getTotalShares());
+        savePortfolio(this.portfolio);
 
         if (onSellCompleteCallback != null) {
             onSellCompleteCallback.run(); // example usage
@@ -186,7 +189,6 @@ public class PortfolioIntegration {
 
     public void refreshPortfolioPrices() throws Exception {
         if (this.portfolio.getHoldings().isEmpty()) {
-            System.out.println("No holdings to update");
             return;
         }
 
@@ -359,6 +361,7 @@ public class PortfolioIntegration {
         portfolioData.put("userId", portfolio.getUserId());
 
         List<Map<String, Object>> holdingsData = new ArrayList<>();
+        System.out.println("Holdings before save:");
         for (PortfolioEntry entry : portfolio.getHoldings()) {
             holdingsData.add(entry.toMap());
         }
@@ -446,6 +449,25 @@ public class PortfolioIntegration {
         );
 
         this.portfolio.addTransaction(transaction);
+    }
+
+    private void saveSellTransaction(String tickerSymbol, String companyName, int quantity, double pricePerShare, Date sellDate) throws Exception {
+        double currentPrice = finnhubService.getQuoteForTicker(tickerSymbol).getCurrentPrice();
+
+        // Just log the sell transaction — do NOT modify holdings
+        PortfolioEntry transaction = PortfolioEntry.fromStock(
+                tickerSymbol,
+                companyName,
+                quantity,
+                pricePerShare,   // sell price
+                sellDate,
+                currentPrice     // current price from API
+        );
+
+        this.portfolio.addTransaction(transaction);
+
+        // Save only the transaction (holdings already saved in sellStock)
+        savePortfolio(this.portfolio);
     }
 
     private void documentToPortfolio(Portfolio portfolio, DocumentSnapshot doc) {

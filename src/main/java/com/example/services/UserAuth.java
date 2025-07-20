@@ -92,13 +92,10 @@ public class UserAuth {
             // Store UID for session management
             this.currentUserUid = uid;
 
-            System.out.println("Checking for balance field...");
-
             double balance = 0.0;
             if (doc.exists() && doc.contains("balance")) {
                 try {
                     balance = doc.getDouble("balance");
-                    System.out.println("Final balance before return: " + balance);
                 } catch (Exception e) {
                     System.out.println("Error retrieving balance: " + e.getMessage());
                     balance = 0.0;
