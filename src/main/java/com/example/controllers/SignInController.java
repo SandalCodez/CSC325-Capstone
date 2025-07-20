@@ -95,13 +95,9 @@ public class SignInController {
 
             try {
                 this.loggedInUser = userAuth.loginUser(email, password);
-                System.out.println("loggedInUser UID before set: " + this.loggedInUser.getUid() );
 
                 this.userAuth.setUser(this.loggedInUser);
                 this.loggedInUser.setUserUid(userAuth.getCurrentUserUid());
-
-                System.out.println("loggedInUser UID AFTER set: " + this.loggedInUser.getUid() );
-
 
                 PortfolioIntegration portfolioIntegration = new PortfolioIntegration(db.getFirestore(), finnhubService,userAuth, loggedInUser, portfolio);
 
@@ -109,7 +105,6 @@ public class SignInController {
                 this.uid = userAuth.getCurrentUserUid();
 
                 System.out.println(("Login successful! Welcome " + loggedInUser.getfName()+ ", success"));
-                System.out.println("Balance after login: " + portfolio.getBalance());
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/MainPortfolio.fxml"));
                 Parent MainPortfolioRoot = fxmlLoader.load();
 

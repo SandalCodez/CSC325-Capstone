@@ -6,14 +6,12 @@ import com.example.services.FinnhubService;
 import com.example.services.FirestoreDB;
 import com.example.services.PortfolioIntegration;
 import com.example.services.UserAuth;
-
 import com.example.models.CompanyProfile;
 import com.example.models.Portfolio;
 import com.example.models.PortfolioEntry;
 import com.example.models.Stock;
 import com.example.services.*;
 import com.google.cloud.firestore.Firestore;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,10 +22,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-
 import javafx.scene.control.*;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -180,12 +175,12 @@ public class StockScreenController {
         Parent MainPortfolioRoot = fxmlLoader.load();
 
         MainPortfolioController controller = fxmlLoader.getController();
-        System.out.println("Logged in user: " + this.loggedInUser);
         controller.setLoggedInUser(this.loggedInUser);
         controller.setDependencies(db, userAuth, portfolio, finnhubService, portfolioIntegration, loggedInUser, uid);
         controller.loadRealPortfolioData();
         controller.loadBalanceLabel();
         controller.loadMarketNews();
+        controller.initializeData();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(MainPortfolioRoot));
@@ -196,7 +191,6 @@ public class StockScreenController {
     @FXML
     private void handleBuyButtonClick() {
         try {
-            System.out.println("DEBUG handle buystock balance: " + loggedInUser.getAccountBalance());
             String ticker = tickerLabel.getText().trim().toUpperCase();
             String companyName = companyNameLabel.getText().trim();
 
@@ -288,6 +282,7 @@ public class StockScreenController {
         try {
             portfolioIntegration.sellStock(ticker, quantityToSell, currentPrice, sellDate);
             showAlert("Sell Successful");
+            refreshStockScreen();
         } catch (Exception e) {
             showAlert("Sell Failed: " + e.getMessage());
         }
@@ -304,6 +299,7 @@ public class StockScreenController {
     private void refreshStockScreen() {
         String ticker = tickerLabel.getText().trim().toUpperCase();
         loadStockData(ticker);
+        updateBalanceDisplay();
     }
 
     public void setContext(

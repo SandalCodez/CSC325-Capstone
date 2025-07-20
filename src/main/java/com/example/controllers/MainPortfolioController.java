@@ -119,7 +119,6 @@ public class MainPortfolioController {
     double baseHeight = 800.0;
 
 
-
     @FXML
     private void clearStockSearch(MouseEvent event) {
         StockSearchField.clear();
@@ -193,10 +192,6 @@ public class MainPortfolioController {
             portfolioTable.setRowFactory(tv -> {
                 TableRow<PortfolioEntry> row = new TableRow<>();
                 row.setOnMouseClicked(event -> {
-                    System.out.println("Mouse clikeckd on Table");
-                    System.out.println("click count:" + event.getClickCount());
-                    System.out.println("Row is empty");
-
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         PortfolioEntry selectedEntry = row.getItem();
                         openStockDetails(selectedEntry);
@@ -378,7 +373,6 @@ public class MainPortfolioController {
 
     public void refreshPortfolioScreen() {
         if(loggedInUser != null) {
-            System.out.println("Debug portfolio balance - refresh portfolio screen " + loggedInUser.getAccountBalance());
             loadRealPortfolioData();
             loadPortfolioSummary();
             loadBalanceLabel();
@@ -391,7 +385,6 @@ public class MainPortfolioController {
             Parent root = loader.load();
 
             StockScreenController controller = loader.getController();
-            System.out.println("DEBUG USERAUTH2 = " + userAuth);
             controller.setContext(
                     entry,
                     db,
@@ -402,13 +395,11 @@ public class MainPortfolioController {
                     loggedInUser,
                     uid
             );
-            System.out.println("Debug userAuth = " + (userAuth==null));
             controller.updateBalanceDisplay();
 
-            Stage stage = new Stage();
-            stage.setTitle("Stock Details - " + entry.getTickerSymbol());
-            stage.setScene(new Scene(root));
-            stage.show();
+            Stage currentStage = (Stage) portfolioTable.getScene().getWindow();
+            currentStage.setTitle("Stock Details");
+            currentStage.setScene(new Scene(root));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -420,12 +411,14 @@ public class MainPortfolioController {
     private void handleBackToLogIn(ActionEvent event) throws IOException {
         loggedInUser.logout();
         // Clear the session
+        Portfolio newPortfolio = new Portfolio();
+        PortfolioIntegration newPortfolioIntegration = new PortfolioIntegration(db.getFirestore(), finnhubService, null, newPortfolio);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bearsfrontend/SignIn.fxml"));
 
         Parent SignInRoot = fxmlLoader.load();
 
         SignInController controller = fxmlLoader.getController();
-        controller.setSplashDependencies(db, userAuth, portfolio, finnhubService);
+        controller.setDependencies(db, userAuth, newPortfolio, finnhubService, newPortfolioIntegration, null, null);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(SignInRoot));
         stage.setTitle("SignIn");
@@ -457,9 +450,6 @@ public class MainPortfolioController {
         stage.setTitle("Stock Screen");
         stage.show();
     }
-
-
-
 
     public void loadMarketNews() {
         Task<Void> newsTask = new Task<Void>() {
@@ -629,7 +619,6 @@ public class MainPortfolioController {
     }
 
     public void loadBalanceLabel(){
-        System.out.println("Debug portfolio balane - load balance label " + portfolio.getBalance());
         Platform.runLater(() -> {
             if (balanceLabel != null) {
                 balanceLabel.setText(String.format("$%.2f", loggedInUser.getAccountBalance()));

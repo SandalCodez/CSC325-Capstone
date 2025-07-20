@@ -37,11 +37,13 @@ public class Portfolio {
     }
 
     public void addOrUpdateEntry(PortfolioEntry entry) {
-        String ticker = entry.getTickerSymbol().toUpperCase();
+        String ticker = entry.getTickerSymbol().trim().toUpperCase();
 
         for (int i = 0; i < holdings.size(); i++) {
-            if (holdings.get(i).getTickerSymbol().equalsIgnoreCase(ticker)) {
+            String existing = holdings.get(i).getTickerSymbol();
+            if (existing.equals(ticker)) {
                 holdings.set(i, entry); // Replace existing
+                System.out.println("Replaced entry for: " + ticker + "with shares" + entry.getTotalShares());
                 return;
             }
         }
@@ -81,7 +83,7 @@ public class Portfolio {
 
 
     public void removeEntry(String tickerSymbol) {
-        holdings.removeIf(entry -> entry.getTickerSymbol().equals(tickerSymbol));
+        holdings.removeIf(entry -> entry.getTickerSymbol().equalsIgnoreCase(tickerSymbol));
     }
 
     public String getUserId() {
