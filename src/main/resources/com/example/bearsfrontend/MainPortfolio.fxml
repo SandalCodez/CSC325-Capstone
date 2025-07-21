@@ -33,7 +33,7 @@
          <top>
             <HBox prefHeight="42.0" prefWidth="168.0">
 
-               <Label fx:id="space0" prefHeight="39.0" prefWidth="45.0" textFill="WHITE">
+               <Label fx:id="space0" prefHeight="38.0" prefWidth="18.0" textFill="WHITE">
                   <padding><Insets top="12.0" /></padding>
                   <font><Font name="System Bold Italic" size="18.0" /></font>
                </Label>
@@ -91,29 +91,6 @@
             <VBox prefHeight="442.0" prefWidth="230.0" spacing="8.0" BorderPane.alignment="CENTER_LEFT">
                <children>
 
-                  <HBox alignment="CENTER_LEFT" spacing="5.0">
-                     <children>
-                        <Label fx:id="space6" prefHeight="39.0" prefWidth="26.0" textFill="WHITE">
-                           <padding>
-                              <Insets top="12.0" />
-                           </padding>
-                           <font>
-                              <Font name="System Bold Italic" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="30.0" text="Balance:" textFill="#39ff43">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="balanceLabel" prefHeight="30.0" text="11111111111" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold Italic" size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-
                   <VBox prefHeight="452.0" prefWidth="228.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;">
                      <children>
 
@@ -143,7 +120,7 @@
          <center>
             <VBox BorderPane.alignment="CENTER">
                <children>
-                  <TableView fx:id="portfolioTable" prefHeight="392.0" prefWidth="701.0" style="-fx-control-inner-background: #384054; -fx-background-radius: 5; -fx-table-cell-border-color: #384054; -fx-padding: 5;" stylesheets="@table.css">
+                  <TableView fx:id="portfolioTable" prefHeight="447.0" prefWidth="701.0" style="-fx-control-inner-background: #384054; -fx-background-radius: 5; -fx-table-cell-border-color: #384054; -fx-padding: 5;" stylesheets="@table.css">
                      <columns>
                         <TableColumn fx:id="tickerColumn" prefWidth="75.0" text="Ticker" />
                         <TableColumn fx:id="companyColumn" prefWidth="100.0" text="Company" />
@@ -223,7 +200,7 @@
             </VBox>
          </right>
          <bottom>
-            <VBox prefHeight="231.0" prefWidth="1200.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;" BorderPane.alignment="CENTER">
+            <VBox prefHeight="170.0" prefWidth="1200.0" style="-fx-border-color: #45CC2D; -fx-border-radius: 10; -fx-padding: 8; -fx-background-radius: 10; -fx-background-color: #23272f;" BorderPane.alignment="CENTER">
                <children>
                   <Label text="Portfolio Summary" textFill="#4f8cff">
                      <font>
@@ -233,8 +210,23 @@
                         <Insets left="5.0" />
                      </VBox.margin>
                   </Label>
-                  <VBox spacing="5.0">
+                  <VBox prefHeight="162.0" prefWidth="1177.0" spacing="5.0">
                      <children>
+         
+                              <HBox prefHeight="18.0" prefWidth="1177.0" spacing="5.0">
+                           <children>
+                              <Label prefHeight="32.0" prefWidth="65.0" text="Balance:" textFill="#39ff43" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="balanceLabel" prefHeight="25.0" prefWidth="168.0" text="11111111111" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
                         <HBox spacing="10.0">
                            <children>
                               <Label text="Total Value:" textFill="WHITE">
@@ -276,21 +268,6 @@
                         <Insets left="5.0" top="10.0" />
                      </VBox.margin>
                   </VBox>
-                  <TextArea prefHeight="300.0" prefWidth="667.0" style="-fx-control-inner-background: #384054; -fx-text-fill: #ffffff;" text="Portfolio overview and performance metrics will appear here." VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                     <effect>
-                        <DropShadow blurType="ONE_PASS_BOX">
-                           <color>
-                              <Color red="1.0" green="1.0" blue="1.0" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextArea>
                </children>
                <effect>
                   <DropShadow>
