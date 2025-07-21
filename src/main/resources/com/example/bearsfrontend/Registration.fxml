@@ -29,8 +29,8 @@
          <PasswordField fx:id="passwordField" layoutX="66.0" layoutY="258.0" promptText="Password" />
          <PasswordField fx:id="confirmPasswordField" layoutX="387.0" layoutY="258.0" promptText="Confirm Password" />
 
-         <Button fx:id="registerBtn" layoutX="200.0" layoutY="312.0" mnemonicParsing="false" onAction="#registerClick" text="Register" />
-         <Button layoutX="333.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
+         <Button fx:id="registerBtn" layoutX="354.0" layoutY="313.0" mnemonicParsing="false" onAction="#registerClick" text="Register" />
+         <Button layoutX="165.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleBackToLogin" text="Back to login" />
 
          <ImageView fitHeight="68.0" fitWidth="141.0" layoutX="230.0" layoutY="14.0" preserveRatio="true">
             <image>
@@ -41,7 +41,7 @@
          <Label fx:id="emailError" layoutX="66.0" layoutY="223.0" prefHeight="13.0" prefWidth="58.0" textFill="RED" />
          <Label fx:id="confirmEmailError" layoutX="386.0" layoutY="218.0" prefHeight="22.0" prefWidth="152.0" textFill="RED" />
          <Label fx:id="confPassError" layoutX="386.0" layoutY="287.0" prefHeight="13.0" prefWidth="165.0" textFill="RED" />
-         <Label fx:id="registerError" alignment="CENTER" layoutX="136.0" layoutY="340.0" prefHeight="43.0" prefWidth="329.0" textAlignment="CENTER" textFill="RED" />
+         <Label fx:id="registerError" alignment="CENTER" layoutX="135.0" layoutY="348.0" prefHeight="43.0" prefWidth="329.0" textAlignment="CENTER" textFill="RED" />
 
       </AnchorPane>
    </Group>
