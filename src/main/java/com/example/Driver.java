@@ -25,7 +25,7 @@ public class Driver extends Application {
        FinnhubService finnhubService = new FinnhubService();
 
         FXMLLoader fxmlLoader = new FXMLLoader(Driver.class.getResource("/com/example/bearsfrontend/splash.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600 , 400);
+        Scene scene = new Scene(fxmlLoader.load(), 1200 , 800);
 
         SplashController controller = fxmlLoader.getController();
         controller.setDependencies(db, userAuth, portfolio, finnhubService);
