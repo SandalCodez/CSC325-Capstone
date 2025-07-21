@@ -2,20 +2,27 @@
 
 A comprehensive JavaFX-based portfolio management application that enables users to track stock investments, view real-time market data, and interact with an AI-powered financial assistant.
 
-![Bears Logo](src/main/screenshots/bullLogoNoBG.png)
+![Bears Logo](src/screenshots/bullLogoNoBG.png)
+
 
 ## 📸 Screenshots
 
 ### Main Portfolio Dashboard
+
+![Portfolio Dashboard](src/screenshots/mainPortfolioSC.png)
 *Real-time portfolio tracking with live market data and ChatGPT integration*
 
 ### Stock Details View
 
+![Stock Details](src/screenshots/stockPageSC.png)
 *Detailed stock information with buy/sell functionality and company news*
 
 ### User Authentication
+
+![Login Screen](src/screenshots/signInSC.png)
 *Secure login interface*
 
+![Registration Screen](src/screenshots/registerSC.png)
 *User registration with form validation*
 
 ## ✨ Features
