@@ -2,7 +2,7 @@
 
 A comprehensive JavaFX-based portfolio management application that enables users to track stock investments, view real-time market data, and interact with an AI-powered financial assistant.
 
-
+![Bears Logo](src/main/screenshots/bullLogoNoBG.png)
 
 ## 📸 Screenshots
 
