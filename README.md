@@ -279,7 +279,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
 - Esteban Sandoval  https://github.com/SandalCodez
 - Dan Stevens https://github.com/DanS-89
 - Elijah Tan https://github.com/elijahatan
