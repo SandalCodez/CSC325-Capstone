@@ -291,12 +291,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Firebase** for authentication and database services
 - **JavaFX** community for UI framework support
 
-## 📞 Support
-
-For support and questions:
-- Create an issue on GitHub
-- Email: support@bearsportfolio.com
-- Documentation: [Wiki](https://github.com/yourusername/bears-portfolio/wiki)
 
 ---
 
