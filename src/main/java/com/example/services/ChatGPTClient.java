@@ -45,7 +45,6 @@ public class ChatGPTClient {
 
         // Send the request and get the response
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("[DEBUG] API Response: " + response.body());
 
 
         //Parse the JSON response to get the AI's answer
